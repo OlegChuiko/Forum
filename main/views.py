@@ -1,21 +1,21 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth import logout
-from main.models import Post
+from main.models import Post, Comment
 
 def index(request):
+    posts = Post.objects.all().order_by('-created_at')
 
-    if request.method == "POST":
-        title = request.POST.get("title")
-        content = request.POST.get("content")
+    # Додати коментар
+    if request.method == 'POST' and 'comment_content' in request.POST:
+        post_id = request.POST.get('post_id')
+        post = get_object_or_404(Post, id=post_id)
+        comment_content = request.POST.get('comment_content')
         
-        # Створення нового поста
-        post = Post(title=title, content=content, author=request.user)
-        post.save()
+        # Створити новий коментар
+        Comment.objects.create(post=post, author=request.user, content=comment_content)
+        
+        return redirect('index')  # Повертаємо на головну сторінку
 
-    # Отримуємо всі пости з бази даних
-    posts = Post.objects.all().order_by('-created_at')  # Сортуємо по даті створення (від найновіших)
-
-    # Повертаємо шаблон з оновленими постами
     return render(request, "main/index.html", {'posts': posts})
 
 

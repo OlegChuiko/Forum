@@ -36,10 +36,40 @@
                     </div>
 
                     <div class="post-actions">
-                        <p>Лайки: {{ post.likes }} | Дизлайки: {{ post.dislikes }}</p>
-                        <button>Лайк</button>
-                        <button>Дизлайк</button>
+                        <p>Лайки: <span id="likes-{{ post.id }}">{{ post.likes }}</span> | 
+                        Дизлайки: <span id="dislikes-{{ post.id }}">{{ post.dislikes }}</span></p>
+
+                        <!-- Кнопка лайку -->
+                        <button id="like-btn-{{ post.id }}" class="like-btn" data-post-id="{{ post.id }}">
+                            Лайк
+                        </button>
+
+                        <!-- Кнопка дизлайку -->
+                        <button id="dislike-btn-{{ post.id }}" class="dislike-btn" data-post-id="{{ post.id }}">
+                            Дизлайк
+                        </button>
                     </div>
+
+                    <!-- Виведення коментарів -->
+                    <div class="comments">
+                        <h4>Коментарі:</h4>
+                        {% for comment in post.comments.all %}
+                            <div class="comment">
+                                <p><strong>{{ comment.author.username }}</strong>: {{ comment.content }}</p>
+                                <p class="comment-date">Створено: {{ comment.created_at }}</p>
+                            </div>
+                        {% empty %}
+                            <p>Немає коментарів.</p>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Форма для додавання коментаря -->
+                    <form method="POST" action="{% url 'index' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="post_id" value="{{ post.id }}">
+                        <textarea name="comment_content" required placeholder="Напишіть коментар..."></textarea>
+                        <button type="submit">Додати коментар</button>
+                    </form>
                 </div>
             {% empty %}
                 <p>Немає постів.</p>
