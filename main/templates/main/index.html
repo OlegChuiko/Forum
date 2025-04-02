@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Головна сторінка форуму</title>
+    <link rel="stylesheet" href="{% static "css/main/index.css" %}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Форум</h1>
+            <div class="user-info">
+                <p>Вітаємо, {{ user.username }}!</p>
+                <form action="{% url 'form' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit">Вийти</button>
+                </form>
+            </div>
+        </header>
+
+        <section class="posts">
+            <h2>Пости</h2>
+
+            {% for post in posts %}
+                <div class="post">
+                    <div class="post-header">
+                        <h3>{{ post.title }}</h3>
+                        <p class="post-author">Автор: {{ post.author.username }}</p>
+                        <p class="post-date">Створено: {{ post.created_at }}</p>
+                    </div>
+
+                    <div class="post-content">
+                        <p>{{ post.content }}</p>
+                    </div>
+
+                    <div class="post-actions">
+                        <p>Лайки: {{ post.likes }} | Дизлайки: {{ post.dislikes }}</p>
+                        <button>Лайк</button>
+                        <button>Дизлайк</button>
+                    </div>
+                </div>
+            {% empty %}
+                <p>Немає постів.</p>
+            {% endfor %}
+        </section>
+
+        <section class="create-post">
+            <h2>Напишіть новий пост</h2>
+            <a href="{% url 'create_post' %}"><button>Створити пост</button></a>
+        </section>
+    </div>
+</body>
+</html>

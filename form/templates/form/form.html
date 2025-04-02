@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Реєстрація</title>
+    <link rel="stylesheet" href="{% static "css/form/form.css" %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Реєстрація на форум</h1>
+        
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}  <!-- Вивести форму -->
+            <button type="submit">Зареєструватися</button>
+        </form>
+
+        <p>Вже маєте акаунт? <a href="{% url 'login' %}">Увійти</a></p>
+    </div>
+</body>
+</html>
