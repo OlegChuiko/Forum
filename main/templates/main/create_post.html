@@ -22,12 +22,23 @@
 
         <section class="create-post">
             <h2>Заповніть форму для створення посту</h2>
-            <form method="post">
+            <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input type="text" name="title" placeholder="Заголовок" required>
-                <textarea name="content" placeholder="Вміст вашого поста..." required></textarea>
+                
+                <label for="title">Заголовок</label>
+                <input type="text" name="title" required>
+            
+                <label for="content">Контент</label>
+                <textarea name="content" required></textarea>
+            
+                <label for="image">Зображення (необов'язково)</label>
+                <input type="file" name="image" accept="image/*">
+            
+                <label for="audio">Аудіо (необов'язково)</label>
+                <input type="file" name="audio" accept="audio/*">  <!-- Нове поле -->
+            
                 <button type="submit">Створити пост</button>
-            </form>
+            </form>            
         </section>
     </div>
 </body>

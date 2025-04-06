@@ -1,23 +1,35 @@
 {% load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Реєстрація</title>
-    <link rel="stylesheet" href="{% static "css/form/form.css" %}">
+    <link rel="stylesheet" href="{% static 'css/form/form.css' %}">
 </head>
 <body>
     <div class="container">
         <h1>Реєстрація на форум</h1>
         
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}  <!-- Вивести форму -->
-            <button type="submit">Зареєструватися</button>
-        </form>
+        {% if user.is_authenticated %}
+            <script type="text/javascript">
+                window.location.href = "{% url 'index' %}";
+            </script>
+        {% else %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}  <!-- Вивести форму -->
+                <button type="submit">Зареєструватися</button>
+            </form>
+            <p>Вже маєте акаунт? <a href="{% url 'login' %}">Увійти</a></p>
+        {% endif %}
 
-        <p>Вже маєте акаунт? <a href="{% url 'login' %}">Увійти</a></p>
+        <hr>
+        <h3>Або зареєструйтесь через Google</h3>
+        <a href="{% provider_login_url 'google' %}">
+            <button type="button">Реєстрація через Google</button>
+        </a>
     </div>
 </body>
 </html>

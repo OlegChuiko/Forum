@@ -1,0 +1,93 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-top: 40px;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #007bff;
+    margin-right: 30px;
+}
+
+.profile-info h2 {
+    margin: 0;
+    font-size: 28px;
+    color: #007bff;
+}
+
+.profile-info p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #666;
+}
+
+.user-posts {
+    margin-top: 40px;
+}
+
+.user-posts h3 {
+    font-size: 24px;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+.post {
+    border: 1px solid #ddd;
+    border-left: 5px solid #007bff;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fafafa;
+}
+
+.post h4 {
+    margin-top: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.post .post-date {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+.post p {
+    margin: 0;
+    font-size: 15px;
+}
+
+/* Додано для аватарки */
+.avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;     /* Зробить зображення круглим */
+    object-fit: cover;      /* Щоб не спотворювалось */
+    border: 2px solid #ccc; /* Тонка рамка, опціонально */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Легка тінь, для краси */
+    margin-bottom: 20px;    /* Відступ знизу */
+}

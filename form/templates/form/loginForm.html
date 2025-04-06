@@ -1,11 +1,12 @@
 {% load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вхід на форум</title>
-    <link rel="stylesheet" href="{% static "css/form/loginForm.css" %}">
+    <link rel="stylesheet" href="{% static 'css/form/loginForm.css' %}">
 </head>
 <body>
     <div class="container">
@@ -22,6 +23,9 @@
         {% endif %}
 
         <p>Ще не маєте акаунту? <a href="">Зареєструватися</a></p>
+
+        <!-- Кнопка для входу через Google -->
+        <a href="{% provider_login_url 'google' %}">Увійти через Google</a>
     </div>
 </body>
 </html>

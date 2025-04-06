@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Головна сторінка форуму</title>
-    <link rel="stylesheet" href="{% static "css/main/index.css" %}">
+    <link rel="stylesheet" href="{% static 'css/main/index.css' %}">
 </head>
 <body>
     <div class="container">
@@ -13,7 +13,7 @@
             <h1>Форум</h1>
             <div class="user-info">
                 <p>Вітаємо, {{ user.username }}!</p>
-                <form action="{% url 'form' %}" method="post">
+                <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
                     <button type="submit">Вийти</button>
                 </form>
@@ -27,35 +27,81 @@
                 <div class="post">
                     <div class="post-header">
                         <h3>{{ post.title }}</h3>
-                        <p class="post-author">Автор: {{ post.author.username }}</p>
+                        <p class="post-author">
+                            Автор:
+                            {% if post.author.socialaccount_set.exists %}
+                                {% with post.author.socialaccount_set.first as social_account %}
+                                    {% if social_account.provider == "google" %}
+                                        <img src="{{ social_account.get_avatar_url }}" alt="{{ post.author.username }}'s avatar" class="avatar">
+                                    {% else %}
+                                        {% if post.author.userprofile.avatar %}
+                                            <img src="{{ post.author.userprofile.avatar.url }}" alt="{{ post.author.username }}'s avatar" class="avatar">
+                                        {% else %}
+                                            <img src="{% static 'avatars/default.png' %}" alt="default avatar" class="avatar">
+                                        {% endif %}
+                                    {% endif %}
+                                {% endwith %}
+                            {% else %}
+                                {% if post.author.userprofile.avatar %}
+                                    <img src="{{ post.author.userprofile.avatar.url }}" alt="{{ post.author.username }}'s avatar" class="avatar">
+                                {% else %}
+                                    <img src="{% static 'avatars/default.png' %}" alt="default avatar" class="avatar">
+                                {% endif %}
+                            {% endif %}
+                            <a href="{% url 'profile' post.author.username %}">{{ post.author.username }}</a>
+                        </p>
                         <p class="post-date">Створено: {{ post.created_at }}</p>
                     </div>
 
                     <div class="post-content">
                         <p>{{ post.content }}</p>
+                        {% if post.image %}
+                            <div class="post-image">
+                                <img src="{{ post.image.url }}" alt="Post image" style="max-width: 50%; height: auto;">
+                            </div>
+                        {% endif %}
+                        {% if post.audio %}
+                            <div class="post-audio">
+                                <audio controls>
+                                    <source src="{{ post.audio.url }}" type="audio/mpeg">
+                                    Ваш браузер не підтримує відтворення аудіо.
+                                </audio>
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div class="post-actions">
                         <p>Лайки: <span id="likes-{{ post.id }}">{{ post.likes }}</span> | 
                         Дизлайки: <span id="dislikes-{{ post.id }}">{{ post.dislikes }}</span></p>
-
-                        <!-- Кнопка лайку -->
-                        <button id="like-btn-{{ post.id }}" class="like-btn" data-post-id="{{ post.id }}">
-                            Лайк
-                        </button>
-
-                        <!-- Кнопка дизлайку -->
-                        <button id="dislike-btn-{{ post.id }}" class="dislike-btn" data-post-id="{{ post.id }}">
-                            Дизлайк
-                        </button>
+                    
+                        <button id="like-btn-{{ post.id }}" class="like-btn" data-post-id="{{ post.id }}"
+                            {% if post.user_liked %}disabled{% endif %}>Лайк</button>
+                    
+                        <button id="dislike-btn-{{ post.id }}" class="dislike-btn" data-post-id="{{ post.id }}"
+                            {% if post.user_disliked %}disabled{% endif %}>Дизлайк</button>
                     </div>
 
-                    <!-- Виведення коментарів -->
                     <div class="comments">
                         <h4>Коментарі:</h4>
                         {% for comment in post.comments.all %}
-                            <div class="comment">
-                                <p><strong>{{ comment.author.username }}</strong>: {{ comment.content }}</p>
+                            <div class="comment" data-comment-id="{{ comment.id }}">
+                                <div class="comment-author">
+                                    {% if comment.author.socialaccount_set.exists %}
+                                        {% with comment.author.socialaccount_set.first as sa %}
+                                            <img src="{{ sa.get_avatar_url }}" alt="avatar" class="avatar-small">
+                                        {% endwith %}
+                                    {% elif comment.author.userprofile.avatar %}
+                                        <img src="{{ comment.author.userprofile.avatar.url }}" alt="avatar" class="avatar-small">
+                                    {% else %}
+                                        <img src="{% static 'avatars/default.png' %}" alt="default" class="avatar-small">
+                                    {% endif %}
+                                    <strong>{{ comment.author.username }}</strong>
+                                    {% if comment.author == user %}
+                                        <button class="edit-comment-btn">Редагувати</button>
+                                        <button class="delete-comment-btn">Видалити</button>
+                                    {% endif %}
+                                </div>
+                                <p class="comment-content">{{ comment.content }}</p>
                                 <p class="comment-date">Створено: {{ comment.created_at }}</p>
                             </div>
                         {% empty %}
@@ -63,11 +109,10 @@
                         {% endfor %}
                     </div>
 
-                    <!-- Форма для додавання коментаря -->
-                    <form method="POST" action="{% url 'index' %}">
+                    <form class="comment-form" data-post-id="{{ post.id }}">
                         {% csrf_token %}
                         <input type="hidden" name="post_id" value="{{ post.id }}">
-                        <textarea name="comment_content" required placeholder="Напишіть коментар..."></textarea>
+                        <textarea name="comment_content" required class="comment-text" placeholder="Напишіть коментар..."></textarea>
                         <button type="submit">Додати коментар</button>
                     </form>
                 </div>
@@ -81,5 +126,159 @@
             <a href="{% url 'create_post' %}"><button>Створити пост</button></a>
         </section>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    function updateLikeDislike(postId, action) {
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch(`/like/${postId}/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `csrfmiddlewaretoken=${csrfToken}&action=${action}`,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.likes !== undefined && data.dislikes !== undefined) {
+                document.getElementById(`likes-${postId}`).textContent = data.likes;
+                document.getElementById(`dislikes-${postId}`).textContent = data.dislikes;
+
+                const likeButton = document.getElementById(`like-btn-${postId}`);
+                const dislikeButton = document.getElementById(`dislike-btn-${postId}`);
+
+                if (action === 'like') {
+                    likeButton.disabled = true;
+                    dislikeButton.disabled = false;
+                } else if (action === 'dislike') {
+                    dislikeButton.disabled = true;
+                    likeButton.disabled = false;
+                }
+            } else {
+                console.log('Error:', data);
+            }
+        })
+        .catch(error => console.log('Error:', error));
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const likeButtons = document.querySelectorAll('.like-btn');
+        const dislikeButtons = document.querySelectorAll('.dislike-btn');
+
+        likeButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const postId = button.getAttribute('data-post-id');
+                updateLikeDislike(postId, 'like');
+            });
+        });
+
+        dislikeButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const postId = button.getAttribute('data-post-id');
+                updateLikeDislike(postId, 'dislike');
+            });
+        });
+
+        const commentForms = document.querySelectorAll('.comment-form');
+
+        commentForms.forEach(form => {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                const postId = form.getAttribute('data-post-id');
+                const textarea = form.querySelector('.comment-text');
+                const content = textarea.value.trim();
+                const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                if (!content) return;
+
+                fetch("{% url 'add_comment' %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `csrfmiddlewaretoken=${csrfToken}&post_id=${postId}&content=${encodeURIComponent(content)}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    const commentsSection = form.previousElementSibling;
+                    const newComment = document.createElement('div');
+                    newComment.classList.add('comment');
+                    newComment.dataset.commentId = data.comment_id;
+                    newComment.innerHTML = `
+                        <div class="comment-author">
+                            <img src="${data.avatar_url}" alt="avatar" class="avatar-small">
+                            <strong>${data.author}</strong>
+                            <button class="edit-comment-btn">Редагувати</button>
+                            <button class="delete-comment-btn">Видалити</button>
+                        </div>
+                        <p class="comment-content">${data.content}</p>
+                        <p class="comment-date">Створено: ${data.created_at}</p>
+                    `;
+                    commentsSection.appendChild(newComment);
+                    textarea.value = '';
+                })
+                .catch(err => {
+                    console.error('Помилка при додаванні коментаря:', err);
+                });
+            });
+        });
+
+        // Дії з редагуванням і видаленням
+        document.addEventListener("click", function (e) {
+            if (e.target.classList.contains("delete-comment-btn")) {
+                const commentDiv = e.target.closest(".comment");
+                const commentId = commentDiv.dataset.commentId;
+                const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                fetch("{% url 'delete_comment' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: `csrfmiddlewaretoken=${csrf}&comment_id=${commentId}`
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            commentDiv.remove();
+                        }
+                    });
+            }
+
+            if (e.target.classList.contains("edit-comment-btn")) {
+                const commentDiv = e.target.closest(".comment");
+                const contentEl = commentDiv.querySelector(".comment-content");
+                const originalText = contentEl.textContent;
+                const commentId = commentDiv.dataset.commentId;
+
+                const newContent = prompt("Редагувати коментар:", originalText);
+                if (newContent && newContent !== originalText) {
+                    const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                    fetch("{% url 'edit_comment' %}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: `csrfmiddlewaretoken=${csrf}&comment_id=${commentId}&content=${encodeURIComponent(newContent)}`
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                contentEl.textContent = data.new_content;
+                            }
+                        });
+                    
+                }
+            }
+        });
+    });
+    </script>
 </body>
 </html>

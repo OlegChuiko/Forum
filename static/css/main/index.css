@@ -171,3 +171,44 @@ button:disabled {
         font-size: 1em;
     }
 }
+.avatar {
+    width: 32px;            /* Розмір аватарки */
+    height: 32px;
+    border-radius: 50%;     /* Робить зображення круглим */
+    object-fit: cover;      /* Щоб зображення не сплющувалося */
+    margin-right: 8px;      /* Відступ справа від аватарки */
+    vertical-align: middle; /* Щоб не з'їжджало по вертикалі */
+}
+.avatar-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+.comment-author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+/* .comment {
+    animation: fadeIn 0.3s ease-in-out;
+    padding: 5px 0;
+} */
+.comment {
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.5s forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
