@@ -17,5 +17,9 @@ def save_user_profile(sender, instance, **kwargs):
 @receiver(pre_social_login)
 def create_profile_on_social_login(sender, request, sociallogin, **kwargs):
     user = sociallogin.user
+
+    if not user.pk:
+        user.save()  # Обов'язково зберігаємо користувача, якщо ще не збережений
+
     if not hasattr(user, 'userprofile'):
         UserProfile.objects.create(user=user)
