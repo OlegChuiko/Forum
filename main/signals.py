@@ -1,16 +1,17 @@
-from django.db.models.signals import post_save
-from django.dispatch import receiver
+from allauth.socialaccount.models import SocialAccount
 from allauth.account.signals import user_signed_up
-from django.contrib.auth.models import User
-from .models import UserProfile
 from django.utils.crypto import get_random_string
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User
+from django.dispatch import receiver
+from .models import UserProfile
+from forum import settings
 
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created and not hasattr(instance, 'userprofile'):
         UserProfile.objects.create(user=instance)
-
 
 @receiver(user_signed_up)
 def handle_social_signup(request, user, **kwargs):
@@ -23,7 +24,6 @@ def handle_social_signup(request, user, **kwargs):
     if not hasattr(user, 'userprofile'):
         UserProfile.objects.create(user=user)
 
-
 def generate_unique_username(base_username):
     username = base_username
     counter = 1
@@ -31,3 +31,10 @@ def generate_unique_username(base_username):
         username = f"{base_username}{counter}"
         counter += 1
     return username
+
+@receiver(post_save, sender=User)
+def set_default_avatar(sender, instance, created, **kwargs):
+    if created and not SocialAccount.objects.filter(user=instance).exists():
+        default_avatar_url = settings.DEFAULT_AVATAR_URL
+        instance.userprofile.avatar = default_avatar_url
+        instance.userprofile.save()

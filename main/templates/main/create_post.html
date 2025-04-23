@@ -1,45 +1,199 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Створення посту</title>
-    <link rel="stylesheet" href="{% static 'css/main/create_post.css' %}">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Створення нового посту</h1>
-            <div class="user-info">
-                <p>Вітаємо, {{ user.username }}!</p>
-                <form action="{% url 'index' %}" method="get">
-                    {% csrf_token %}
-                    <button type="submit">Вийти</button>
-                </form>
-            </div>
-        </header>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="title" content="Ask online Form">
+        <meta name="description" content="The Ask is a bootstrap design help desk, support forum website template coded and designed with bootstrap Design, Bootstrap, HTML5 and CSS. Ask ideal for wiki sites, knowledge base sites, support forum sites">
+        <meta name="keywords" content="HTML, CSS, JavaScript,Bootstrap,js,Forum,webstagram ,webdesign ,website ,web ,webdesigner ,webdevelopment">
+        <meta name="robots" content="index, nofollow">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="language" content="English">
+        <link href="{% static 'css/main/responsive.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/main/bootstrap.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/main/style.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/main/animate.css' %}" rel="stylesheet" type="text/css"> 
+        <link href="{% static 'css/main/editor.css' %}" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    </head>
 
-        <section class="create-post">
-            <h2>Заповніть форму для створення посту</h2>
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
+    <body>
+        <div class="top-bar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="navbar-menu-left-side239">
+                            <ul>
+                                <li><a href="#"><i class="fa fa-envelope-o" aria-hidden="true"></i>Contact</a></li>
+                                <li><a href="#"><i class="fa fa-headphones" aria-hidden="true"></i>Support</a></li>
+                                <li><a href="{% url 'logout' %}"><i class="fa fa-user" aria-hidden="true"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="navbar-serch-right-side">
+                            <form class="navbar-form" role="search" action="{% url 'search_results' %}">
+                                <div class="input-group add-on">
+                                    <input class="form-control form-control222" placeholder="Search" name="srch-term" id="srch-term" type="text" value="{{ request.GET.query }}">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default btn-default2913" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                 
-                <label for="title">Заголовок</label>
-                <input type="text" name="title" required>
-            
-                <label for="content">Контент</label>
-                <textarea name="content" required></textarea>
-            
-                <label for="image">Зображення (необов'язково)</label>
-                <input type="file" name="image" accept="image/*">
-            
-                <label for="audio">Аудіо (необов'язково)</label>
-                <input type="file" name="audio" accept="audio/*">  <!-- Нове поле -->
-            
-                <button type="submit">Створити пост</button>
-            </form>            
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="top-menu-bottom932">
+            <nav class="navbar navbar-default">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                        <a class="navbar-brand" href="#"><img src="image/logo.png" alt="Logo"></a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav"> </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="{% url 'index'%}">Home</a></li>
+                            <li><a href="{% url 'create_post'%}">Ask Question</a></li>
+                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Question <span class="caret"></span></a>
+                                <ul class="dropdown-menu animated zoomIn">
+                                    <li><a href="category.html">Question Category</a></li>
+                                    <li><a href="category.html">HTML</a></li>
+                                    <li><a href="category.html">CSS</a></li>
+                                    <li><a href="category.html">Javascript</a></li>
+                                    <li><a href="category.html">Bootstrap</a></li>
+                                </ul>
+                            </li>
+                        
+                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog <span class="caret"></span></a>
+                                <ul class="dropdown-menu animated zoomIn">
+                                    <li><a href="blog.html">Blog </a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Page <span class="caret"></span></a>
+                                <ul class="dropdown-menu animated zoomIn">
+                                    <li><a href="logIn.html">Login</a></li>
+                                    <li><a href="contact_us.html"> Contact Us</a></li>
+                                    <li><a href="ask_question.html"> Ask Question </a></li>
+                                    <li><a href="post-deatils.html"> Post-Details </a></li>
+                                    <li><a href="user.html">All User</a></li>
+                                    <li><a href="user_question.html"> User Question </a></li>
+                                    <li><a href="category.html"> Category </a></li>
+                                    <li><a href="#"> 404 </a></li>
+                                </ul>
+                            </li>
+                            <li><a href="contact_us.html">Contact us</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <section class="header-descriptin329">
+            <div class="container">
+                <h3>Ask Question</h3>
+                <ol class="breadcrumb breadcrumb839">
+                    <li><a href="{% url 'index'%}">Home</a></li>
+                    <li class="active">Ask Question</li>
+                </ol>
+            </div>
         </section>
+        <section class="main-content920">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="ask-question-input-part032">
+                            <h4>Ask Question</h4>
+                        <hr>
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="question-title39">
+                                    <span class="form-description433">Question-Title* </span><input type="text" name="title" class="question-ttile32" placeholder="Write Your Question Title">
+                                </div>
+                                
+                                <div class="button-group-addfile3239">
+                                    <span class="form-description23993">Attactment*</span><input type="file" name="image" class="question-ttile3226">
+                                    
+                                </div>
+                                <div class="details2-239">
+                                    <div class="col-md-12 nopadding">
+                                        <textarea name="content" id="txtEditor" ></textarea> 
+                                    </div>
+                                </div>	  
+                                <div class="publish-button2389">
+                                    <button type="submit" class="publis1291">Publish your Question</button>
+                                </div>               
+                            </form>
+                    </div>
+                </div>
+            <aside class="col-md-3 sidebar97239">
+                <div class="status-part3821">
+                <h4>stats</h4> 
+                    <a href="#"><i class="fa fa-question-circle" aria-hidden="true"> Question({{post_count}})</i></a>
+                    <i class="fa fa-comment" aria-hidden="true"> Answers({{comment_count}})</i>
+                </div>  
+                <div class="categori-part329">
+                    <h4>Category</h4>
+                    <ul>
+                        <li><a href="#">web developer</a></li>
+                        <li><a href="#">Andriod developer</a></li>
+                        <li><a href="#">grapics developer</a></li>
+                        <li><a href="#">web developer</a></li>
+                        
+                    </ul>
+                </div>
+                <div class="recent-post3290">
+                    <h4>Recent Posts</h4>
+                    {% if random_posts %}
+                        {% for post in random_posts %}
+                            <div class="post-details021">
+                                <a href="{% url 'post_detail' post.slug %}">
+                                    <h5>{{ post.title }}</h5>
+                                </a>
+                                <p>{{ post.content|truncatewords:12 }}</p>
+                                <small style="color: #848991">{{ post.created_at|date:"F d, Y" }}</small>
+                                <hr>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No recent posts.</p>
+                    {% endif %}
+                </div>      
+            
+            </aside>
+                </div>
+            </div>
+        </section>
+        
     </div>
-</body>
+    <section class="footer-social">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Copyright 2017 Ask me | <strong>Sudo  Coder</strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="{% static 'js/editor.js' %}"></script>
+        <script>
+            $(document).ready(function () {
+                $("#txtEditor").Editor();
+        
+                $("form").on("submit", function () {
+                    const content = $(".Editor-editor").html();  
+                    $("#txtEditor").val(content);  
+                });
+            });
+        </script>
+    
+    </body>
 </html>

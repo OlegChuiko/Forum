@@ -1,16 +1,15 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
-from .forms import RegisterForm
-from django.contrib.auth import login,authenticate
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login,authenticate
+from django.shortcuts import render, redirect
+from .forms import RegisterForm
 
 def form(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # автоматично входить користувач після реєстрації
-            return redirect('index')  # перенаправлення на головну сторінку
+            login(request, user)
+            return redirect('index') 
     else:
         form = RegisterForm()
     
@@ -25,9 +24,8 @@ def user_login(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('index')  # Перенаправлення на головну сторінку після успішного входу
+                return redirect('index')
             else:
-                # Якщо аутентифікація не вдалася
                 return render(request, 'form/loginForm.html', {'form': form, 'error': 'Невірне ім\'я користувача або пароль.'})
     else:
         form = AuthenticationForm()

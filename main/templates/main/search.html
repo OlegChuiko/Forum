@@ -1,0 +1,213 @@
+{% load static %}
+{% load tz %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="title" content="Ask online Form">
+        <meta name="description" content="The Ask is a bootstrap design help desk, support forum website template coded and designed with bootstrap Design, Bootstrap, HTML5 and CSS. Ask ideal for wiki sites, knowledge base sites, support forum sites">
+        <meta name="keywords" content="HTML, CSS, JavaScript,Bootstrap,js,Forum,webstagram ,webdesign ,website ,web ,webdesigner ,webdevelopment">
+        <meta name="robots" content="index, nofollow">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="language" content="English">
+        <title>Ask Me</title>
+        <link href="{% static 'css/main/bootstrap.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/main/style.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/main/animate.css' %}" rel="stylesheet" type="text/css"> 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <body>
+        <div class="top-bar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="navbar-menu-left-side239">
+                            <ul>
+                                <li><a href="#"><i class="fa fa-envelope-o" aria-hidden="true"></i>Contact</a></li>
+                                <li><a href="#"><i class="fa fa-headphones" aria-hidden="true"></i>Support</a></li>
+                                <li><a href="{% url 'logout' %}"><i class="fa fa-user" aria-hidden="true"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="navbar-serch-right-side">
+                            <form method="get" class="navbar-form" role="search" action="{% url 'search_results' %}">
+                                <div class="input-group add-on">
+                                    <input class="form-control form-control222" name="query" placeholder="Search" id="srch-term" type="text"  value="{{ request.GET.query }}">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default btn-default2913" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="top-menu-bottom932">
+            <nav class="navbar navbar-default">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                        <a class="navbar-brand" href="#"><img src="image/logo.png" alt="Logo"></a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav"> </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="{% url 'index'%}">Home</a></li>
+                            <li><a href="{% url 'create_post'%}">Ask Question</a></li>
+                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog <span class="caret"></span></a>
+                                <ul class="dropdown-menu animated zoomIn">
+                                    <li><a href="blog.html">Blog </a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Page <span class="caret"></span></a>
+                                <ul class="dropdown-menu animated zoomIn">
+                                    <li><a href="logIn.html">Login</a></li>
+                                    <li><a href="contact_us.html"> Contact Us</a></li>
+                                    <li><a href="ask_question.html"> Ask Question </a></li>
+                                    <li><a href="post-deatils.html"> Post-Details </a></li>
+                                    <li><a href="user.html">All User</a></li>
+                                    <li><a href="user_question.html"> User Question </a></li>
+                                    <li><a href="category.html"> Category </a></li>
+                                    <li><a href="#"> 404 </a></li>
+                                </ul>
+                            </li>
+                            <li><a href="contact_us.html">Contact us</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </nav>
+        </div>
+        <section class="welcome-part-one">
+            <div class="container">
+                <div class="welcome-demop102 text-center">
+                    <h2>Welcome to Ask me, Awesome Questions & Answer Template</h2>
+                    <p>Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque
+                        <br> habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit</p>
+                    <div class="form-style8292">
+                        <form method="get" action="{% url 'search_results' %}"> 
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                </span>
+                                <input type="text" name="query" class="form-control form-control8392" placeholder="Ask any question and you be sure find your answer ?" value="{{ request.GET.query }}">
+                                <span class="input-group-addon">
+                                    <button type="submit" style="background: none; border: none; padding: 0; color: #fff; font-size: 15px; text-decoration: none; font-weight: bold;">Ask Now</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="main-content920">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div id="main">
+                            {% if query %}
+                                <h2>Search results for "{{ query }}"</h2>
+                            {% else %}
+                                <h2>No search query provided</h2>
+                            {% endif %}
+                            {% for post in results %}
+                                <div class="question-type2033">
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <div class="left-user12923 left-user12923-repeat">
+                                                {% if post.author.socialaccount_set.exists %}
+                                                    {% with post.author.socialaccount_set.first as social_account %}
+                                                        <img src="{{ social_account.get_avatar_url }}" alt="Avatar">
+                                                    {% endwith %}
+                                                {% elif post.author.userprofile.avatar %}
+                                                    <img src="{{ post.author.userprofile.avatar.url }}" alt="Avatar">
+                                                {% else %}
+                                                    <img src="{{ DEFAULT_AVATAR_URL }}" alt="Default avatar">
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="right-description893">
+                                                <div id="que-hedder2983">
+                                                    <h3><a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a></h3>
+                                                </div>
+                                                <div class="ques-details10018">
+                                                    <p>{{ post.content|safe }}</p>
+                                                    {% if post.image %}
+                                                        <div class="post-image">
+                                                            <img src="{{ post.image.url }}" alt="Post image" style="max-width: 50%; height: auto;">
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if post.audio %}
+                                                        <div class="post-audio">
+                                                            <audio controls>
+                                                                <source src="{{ post.audio.url }}" type="audio/mpeg">
+                                                                Ваш браузер не підтримує відтворення аудіо.
+                                                            </audio>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                <hr>
+                                                <div class="ques-icon-info3293">
+                                                    <a href="#"><i class="fa fa-star" aria-hidden="true"> 0 </i></a>
+                                                    <a href="#"><i class="fa fa-folder" aria-hidden="true"> wordpress</i></a>
+                                                    <a href="#"><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a>
+                                                    <a href="#"><i class="fa fa-question-circle-o" aria-hidden="true"> Question</i></a>
+                                                    <a href="#"><i class="fa fa-bug" aria-hidden="true"> Report</i></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p>No results found for your search.</p>
+                            {% endfor %}
+
+                            {% if results.paginator.num_pages > 1 %}
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination">
+                                        {% if results.has_previous %}
+                                            <li><a href="?query={{ query }}&page={{ results.previous_page_number }}">&laquo;</a></li>
+                                        {% else %}
+                                            <li class="disabled"><span>&laquo;</span></li>
+                                        {% endif %}
+
+                                        {% for num in results.paginator.page_range %}
+                                            {% if results.number == num %}
+                                                <li class="active"><span>{{ num }}</span></li>
+                                            {% else %}
+                                                <li><a href="?query={{ query }}&page={{ num }}">{{ num }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                        {% if results.has_next %}
+                                            <li><a href="?query={{ query }}&page={{ results.next_page_number }}">&raquo;</a></li>
+                                        {% else %}
+                                            <li class="disabled"><span>&raquo;</span></li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+                            {% endif %}
+        </section>
+        <section class="footer-social">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Copyright 2017 Ask me | <strong>Sudo  Coder</strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    </body>
+
+</html>

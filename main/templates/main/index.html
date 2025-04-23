@@ -1,284 +1,520 @@
 {% load static %}
+{% load tz %}
+
 <!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Головна сторінка форуму</title>
-    <link rel="stylesheet" href="{% static 'css/main/index.css' %}">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Форум</h1>
-            <div class="user-info">
-                <p>Вітаємо, {{ user.username }}!</p>
-                <form action="{% url 'logout' %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit">Вийти</button>
-                </form>
-            </div>
-        </header>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="title" content="Ask online Form">
+        <meta name="description" content="The Ask is a bootstrap design help desk, support forum website template coded and designed with bootstrap Design, Bootstrap, HTML5 and CSS. Ask ideal for wiki sites, knowledge base sites, support forum sites">
+        <meta name="keywords" content="HTML, CSS, JavaScript,Bootstrap,js,Forum,webstagram ,webdesign ,website ,web ,webdesigner ,webdevelopment">
+        <meta name="robots" content="index, nofollow">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="language" content="English">
+        <title>Ask Me</title>
+        <link href="{% static 'css/main/bootstrap.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/main/style.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/main/animate.css' %}" rel="stylesheet" type="text/css"> 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
 
-        <section class="posts">
-            <h2>Пости</h2>
-
-            {% for post in posts %}
-                <div class="post">
-                    <div class="post-header">
-                        <h3>{{ post.title }}</h3>
-                        <p class="post-author">
-                            Автор:
-                            {% if post.author.socialaccount_set.exists %}
-                                {% with post.author.socialaccount_set.first as social_account %}
-                                    {% if social_account.provider == "google" %}
-                                        <img src="{{ social_account.get_avatar_url }}" alt="{{ post.author.username }}'s avatar" class="avatar">
-                                    {% else %}
-                                        {% if post.author.userprofile.avatar %}
-                                            <img src="{{ post.author.userprofile.avatar.url }}" alt="{{ post.author.username }}'s avatar" class="avatar">
-                                        {% else %}
-                                            <img src="{% static 'avatars/default.png' %}" alt="default avatar" class="avatar">
-                                        {% endif %}
-                                    {% endif %}
-                                {% endwith %}
-                            {% else %}
-                                {% if post.author.userprofile.avatar %}
-                                    <img src="{{ post.author.userprofile.avatar.url }}" alt="{{ post.author.username }}'s avatar" class="avatar">
-                                {% else %}
-                                    <img src="{% static 'avatars/default.png' %}" alt="default avatar" class="avatar">
-                                {% endif %}
-                            {% endif %}
-                            <a href="{% url 'profile' post.author.username %}">{{ post.author.username }}</a>
-                        </p>
-                        <p class="post-date">Створено: {{ post.created_at }}</p>
-                    </div>
-
-                    <div class="post-content">
-                        <p>{{ post.content }}</p>
-                        {% if post.image %}
-                            <div class="post-image">
-                                <img src="{{ post.image.url }}" alt="Post image" style="max-width: 50%; height: auto;">
-                            </div>
-                        {% endif %}
-                        {% if post.audio %}
-                            <div class="post-audio">
-                                <audio controls>
-                                    <source src="{{ post.audio.url }}" type="audio/mpeg">
-                                    Ваш браузер не підтримує відтворення аудіо.
-                                </audio>
-                            </div>
-                        {% endif %}
-                    </div>
-
-                    <div class="post-actions">
-                        <p>Лайки: <span id="likes-{{ post.id }}">{{ post.likes }}</span> | 
-                        Дизлайки: <span id="dislikes-{{ post.id }}">{{ post.dislikes }}</span></p>
-                    
-                        <button id="like-btn-{{ post.id }}" class="like-btn" data-post-id="{{ post.id }}"
-                            {% if post.user_liked %}disabled{% endif %}>Лайк</button>
-                    
-                        <button id="dislike-btn-{{ post.id }}" class="dislike-btn" data-post-id="{{ post.id }}"
-                            {% if post.user_disliked %}disabled{% endif %}>Дизлайк</button>
-                    </div>
-
-                    <div class="comments">
-                        <h4>Коментарі:</h4>
-                        {% for comment in post.comments.all %}
-                            <div class="comment" data-comment-id="{{ comment.id }}">
-                                <div class="comment-author">
-                                    {% if comment.author.socialaccount_set.exists %}
-                                        {% with comment.author.socialaccount_set.first as sa %}
-                                            <img src="{{ sa.get_avatar_url }}" alt="avatar" class="avatar-small">
-                                        {% endwith %}
-                                    {% elif comment.author.userprofile.avatar %}
-                                        <img src="{{ comment.author.userprofile.avatar.url }}" alt="avatar" class="avatar-small">
-                                    {% else %}
-                                        <img src="{% static 'avatars/default.png' %}" alt="default" class="avatar-small">
-                                    {% endif %}
-                                    <strong>{{ comment.author.username }}</strong>
-                                    {% if comment.author == user %}
-                                        <button class="edit-comment-btn">Редагувати</button>
-                                        <button class="delete-comment-btn">Видалити</button>
-                                    {% endif %}
-                                </div>
-                                <p class="comment-content">{{ comment.content }}</p>
-                                <p class="comment-date">Створено: {{ comment.created_at }}</p>
-                            </div>
-                        {% empty %}
-                            <p>Немає коментарів.</p>
-                        {% endfor %}
-                    </div>
-
-                    <form class="comment-form" data-post-id="{{ post.id }}">
-                        {% csrf_token %}
-                        <input type="hidden" name="post_id" value="{{ post.id }}">
-                        <textarea name="comment_content" required class="comment-text" placeholder="Напишіть коментар..."></textarea>
-                        <button type="submit">Додати коментар</button>
-                    </form>
-                </div>
-            {% empty %}
-                <p>Немає постів.</p>
-            {% endfor %}
-        </section>
-
-        <section class="create-post">
-            <h2>Напишіть новий пост</h2>
-            <a href="{% url 'create_post' %}"><button>Створити пост</button></a>
-        </section>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-    function updateLikeDislike(postId, action) {
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-        fetch(`/like/${postId}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `csrfmiddlewaretoken=${csrfToken}&action=${action}`,
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.likes !== undefined && data.dislikes !== undefined) {
-                document.getElementById(`likes-${postId}`).textContent = data.likes;
-                document.getElementById(`dislikes-${postId}`).textContent = data.dislikes;
-
-                const likeButton = document.getElementById(`like-btn-${postId}`);
-                const dislikeButton = document.getElementById(`dislike-btn-${postId}`);
-
-                if (action === 'like') {
-                    likeButton.disabled = true;
-                    dislikeButton.disabled = false;
-                } else if (action === 'dislike') {
-                    dislikeButton.disabled = true;
-                    likeButton.disabled = false;
-                }
-            } else {
-                console.log('Error:', data);
-            }
-        })
-        .catch(error => console.log('Error:', error));
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const likeButtons = document.querySelectorAll('.like-btn');
-        const dislikeButtons = document.querySelectorAll('.dislike-btn');
-
-        likeButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const postId = button.getAttribute('data-post-id');
-                updateLikeDislike(postId, 'like');
-            });
-        });
-
-        dislikeButtons.forEach(button => {
-            button.addEventListener('click', function () {
-                const postId = button.getAttribute('data-post-id');
-                updateLikeDislike(postId, 'dislike');
-            });
-        });
-
-        const commentForms = document.querySelectorAll('.comment-form');
-
-        commentForms.forEach(form => {
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                const postId = form.getAttribute('data-post-id');
-                const textarea = form.querySelector('.comment-text');
-                const content = textarea.value.trim();
-                const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
-
-                if (!content) return;
-
-                fetch("{% url 'add_comment' %}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `csrfmiddlewaretoken=${csrfToken}&post_id=${postId}&content=${encodeURIComponent(content)}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        alert(data.error);
-                        return;
-                    }
-
-                    const commentsSection = form.previousElementSibling;
-                    const newComment = document.createElement('div');
-                    newComment.classList.add('comment');
-                    newComment.dataset.commentId = data.comment_id;
-                    newComment.innerHTML = `
-                        <div class="comment-author">
-                            <img src="${data.avatar_url}" alt="avatar" class="avatar-small">
-                            <strong>${data.author}</strong>
-                            <button class="edit-comment-btn">Редагувати</button>
-                            <button class="delete-comment-btn">Видалити</button>
+    <body>
+        <div class="top-bar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="navbar-menu-left-side239">
+                            <ul>
+                                <li><a href="#"><i class="fa fa-envelope-o" aria-hidden="true"></i>Contact</a></li>
+                                <li><a href="#"><i class="fa fa-headphones" aria-hidden="true"></i>Support</a></li>
+                                <li><a href="{% url 'logout' %}"><i class="fa fa-user" aria-hidden="true"></i>Logout</a></li>
+                            </ul>
                         </div>
-                        <p class="comment-content">${data.content}</p>
-                        <p class="comment-date">Створено: ${data.created_at}</p>
-                    `;
-                    commentsSection.appendChild(newComment);
-                    textarea.value = '';
-                })
-                .catch(err => {
-                    console.error('Помилка при додаванні коментаря:', err);
-                });
-            });
-        });
+                    </div>
+                    <div class="col-md-6">
+                        <div class="navbar-serch-right-side">
+                            <form method="get" class="navbar-form" role="search" action="{% url 'search_results' %}">
+                                <div class="input-group add-on">
+                                    <input class="form-control  form-control222" name="query" placeholder="Search" id="srch-term" type="text"  value="{{ request.GET.query }}">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default btn-default2913" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="top-menu-bottom932">
+            <nav class="navbar navbar-default">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                        <a class="navbar-brand" href="#"><img src="#" alt="Logo"></a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav"> </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="{% url 'index'%}">Home</a></li>
+                            <li><a href="{% url 'create_post'%}">Ask Question</a></li>
+                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog <span class="caret"></span></a>
+                                <ul class="dropdown-menu animated zoomIn">
+                                    <li><a href="blog.html">Blog </a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Page <span class="caret"></span></a>
+                                <ul class="dropdown-menu animated zoomIn">
+                                    <li><a href="contact_us.html"> Contact Us</a></li>
+                                    <li><a href="ask_question.html"> Ask Question </a></li>
+                                    <li><a href="post-deatils.html"> Post-Details </a></li>
+                                    <li><a href="user.html">All User</a></li>
+                                    <li><a href="user_question.html"> User Question </a></li>
+                                    <li><a href="category.html"> Category </a></li>
+                                </ul>
+                            </li>
+                            <li><a href="contact_us.html">Contact us</a></li>
+                        </ul>
+                    </div>
 
-        // Дії з редагуванням і видаленням
-        document.addEventListener("click", function (e) {
-            if (e.target.classList.contains("delete-comment-btn")) {
-                const commentDiv = e.target.closest(".comment");
-                const commentId = commentDiv.dataset.commentId;
-                const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
+                </div>
+            </nav>
+        </div>
+        
+        <section class="welcome-part-one">
+            <div class="container">
+                <div class="welcome-demop102 text-center">
+                    <h2>Welcome to Ask me, Awesome Questions & Answer</h2>
+                    <p>Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque
+                        <br> habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit</p>
+                    <div class="form-style8292">
+                        <form method="get" action="{% url 'search_results' %}"> 
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                                </span>
+                                <input type="text" name="query" class="form-control form-control8392" placeholder="Ask any question and you be sure find your answer ?" value="{{ request.GET.query }}">
+                                <span class="input-group-addon">
+                                    <button type="submit" style="background: none; border: none; padding: 0; color: #fff; font-size: 15px; text-decoration: none; font-weight: bold;">Ask Now</button>
+                                </span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="main-content920">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div id="main">
+                            <input id="tab1" type="radio" name="filter" value="recent_post" checked>
+                            <label for="tab1">Recent Post</label>
+                            <input id="tab2" type="radio" name="filter" value="most_response">
+                            <label for="tab2">Most Response</label>
+                            <input id="tab3" type="radio" name="filter" value="no_response">
+                            <label for="tab3">No Response</label>
+                            <input id="tab4" type="radio" name="filter" value="popular_post">
+                            <label for="tab4">Popular Post</label>
+                            
+                            <section id="content1">
+                                {% for post in recent_posts %}
+                                    <div class="question-type2033">
+                                        <div class="row">
+                                            <div class="col-md-1">
+                                                <div class="left-user12923 left-user12923-repeat">
+                                                    {% if post.author.socialaccount_set.exists %}
+                                                        {% with post.author.socialaccount_set.first as social_account %}
+                                                            <img src="{{ social_account.get_avatar_url }}" alt="Avatar">
+                                                        {% endwith %}
+                                                    {% elif post.author.userprofile.avatar %}
+                                                        <img src="{{ post.author.userprofile.avatar.url }}" alt="Avatar">
+                                                    {% else %}
+                                                        <img src="{{ DEFAULT_AVATAR_URL }}" alt="Default avatar">
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="right-description893">
+                                                    <div id="que-hedder2983">
+                                                        <h3><a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a></h3>
+                                                    </div>
+                                                    <div class="ques-details10018">
+                                                        <p>{{ post.content|safe }}</p>
+                                                        {% if post.image %}
+                                                            <div class="post-image">
+                                                                <img src="{{ post.image.url }}" alt="Post image" style="max-width: 50%; height: auto;">
+                                                            </div>
+                                                        {% endif %}
+                                                        {% if post.audio %}
+                                                            <div class="post-audio">
+                                                                <audio controls>
+                                                                    <source src="{{ post.audio.url }}" type="audio/mpeg">
+                                                                    Ваш браузер не підтримує відтворення аудіо.
+                                                                </audio>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    <hr>
+                                                    <div class="ques-icon-info3293"> 
+                                                        <a href="#"><i class="fa fa-star" aria-hidden="true"> 0 </i> </a> 
+                                                        <a href="#"><i class="fa fa-folder" aria-hidden="true"> wordpress</i></a> 
+                                                        <a href="#"><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a> 
+                                                        <a href="#"><i class="fa fa-question-circle-o" aria-hidden="true"> Question</i></a>
+                                                        <a href="#"><i class="fa fa-bug" aria-hidden="true"> Report</i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <p>Немає постів.</p>
+                                {% endfor %}
+                            
+                                {% if recent_posts.paginator.num_pages > 1 %}
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination">
+                                            {% if recent_posts.has_previous %}
+                                                <li><a href="?filter=recent_post&page={{ recent_posts.previous_page_number }}">&laquo;</a></li>
+                                            {% else %}
+                                                <li class="disabled"><span>&laquo;</span></li>
+                                            {% endif %}
 
-                fetch("{% url 'delete_comment' %}", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: `csrfmiddlewaretoken=${csrf}&comment_id=${commentId}`
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            commentDiv.remove();
-                        }
+                                            {% for num in recent_posts.paginator.page_range %}
+                                                {% if recent_posts.number == num %}
+                                                    <li class="active"><span>{{ num }}</span></li>
+                                                {% else %}
+                                                    <li><a href="?filter=recent_post&page={{ num }}">{{ num }}</a></li>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if recent_posts.has_next %}
+                                                <li><a href="?filter=recent_post&page={{ recent_posts.next_page_number }}">&raquo;</a></li>
+                                            {% else %}
+                                                <li class="disabled"><span>&raquo;</span></li>
+                                            {% endif %}
+                                        </ul>
+                                    </nav>
+                                {% endif %}
+                            </section>
+                            <section id="content2" style="display: none;">
+                                {% for post in most_response_posts %}
+                                    <div class="question-type2033">
+                                        <div class="row">
+                                            <div class="col-md-1">
+                                                <div class="left-user12923 left-user12923-repeat">
+                                                    {% if post.author.socialaccount_set.exists %}
+                                                        {% with post.author.socialaccount_set.first as social_account %}
+                                                            <img src="{{ social_account.get_avatar_url }}" alt="Avatar">
+                                                        {% endwith %}
+                                                    {% elif post.author.userprofile.avatar %}
+                                                        <img src="{{ post.author.userprofile.avatar.url }}" alt="Avatar">
+                                                    {% else %}
+                                                        <img src="{{ DEFAULT_AVATAR_URL }}" alt="Default avatar">
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="right-description893">
+                                                    <div id="que-hedder2983">
+                                                        <h3><a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a></h3>
+                                                    </div>
+                                                    <div class="ques-details10018">
+                                                        <p>{{ post.content|safe }}</p>
+                                                        {% if post.image %}
+                                                            <div class="post-image">
+                                                                <img src="{{ post.image.url }}" alt="Post image" style="max-width: 50%; height: auto;">
+                                                            </div>
+                                                        {% endif %}
+                                                        {% if post.audio %}
+                                                            <div class="post-audio">
+                                                                <audio controls>
+                                                                    <source src="{{ post.audio.url }}" type="audio/mpeg">
+                                                                    Ваш браузер не підтримує відтворення аудіо.
+                                                                </audio>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    <hr>
+                                                    <div class="ques-icon-info3293"> 
+                                                        <a href="#"><i class="fa fa-star" aria-hidden="true"> 0 </i> </a> 
+                                                        <a href="#"><i class="fa fa-folder" aria-hidden="true"> wordpress</i></a> 
+                                                        <a href="#"><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a> 
+                                                        <a href="#"><i class="fa fa-question-circle-o" aria-hidden="true"> Question</i></a>
+                                                        <a href="#"><i class="fa fa-bug" aria-hidden="true"> Report</i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <p>Немає постів.</p>
+                                {% endfor %}
+                            
+                                {% if most_response_posts.paginator.num_pages > 1 %}
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination">
+                                            {% if most_response_posts.has_previous %}
+                                                <li><a href="?filter=most_response&page={{ most_response_posts.previous_page_number }}">&laquo;</a></li>
+                                            {% else %}
+                                                <li class="disabled"><span>&laquo;</span></li>
+                                            {% endif %}
+
+                                            {% for num in most_response_posts.paginator.page_range %}
+                                                {% if most_response_posts.number == num %}
+                                                    <li class="active"><span>{{ num }}</span></li>
+                                                {% else %}
+                                                    <li><a href="?filter=most_response&page={{ num }}">{{ num }}</a></li>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if most_response_posts.has_next %}
+                                                <li><a href="?filter=most_response&page={{ most_response_posts.next_page_number }}">&raquo;</a></li>
+                                            {% else %}
+                                                <li class="disabled"><span>&raquo;</span></li>
+                                            {% endif %}
+                                        </ul>
+                                    </nav>
+                                {% endif %}
+                            </section>
+                            <section id="content3" style="display: none;">
+                                {% for post in no_response_posts %}
+                                    <div class="question-type2033">
+                                        <div class="row">
+                                            <div class="col-md-1">
+                                                <div class="left-user12923 left-user12923-repeat">
+                                                    {% if post.author.socialaccount_set.exists %}
+                                                        {% with post.author.socialaccount_set.first as social_account %}
+                                                            <img src="{{ social_account.get_avatar_url }}" alt="Avatar">
+                                                        {% endwith %}
+                                                    {% elif post.author.userprofile.avatar %}
+                                                        <img src="{{ post.author.userprofile.avatar.url }}" alt="Avatar">
+                                                    {% else %}
+                                                        <img src="{{ DEFAULT_AVATAR_URL }}" alt="Default avatar">
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="right-description893">
+                                                    <div id="que-hedder2983">
+                                                        <h3><a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a></h3>
+                                                    </div>
+                                                    <div class="ques-details10018">
+                                                        <p>{{ post.content|safe }}</p>
+                                                        {% if post.image %}
+                                                            <div class="post-image">
+                                                                <img src="{{ post.image.url }}" alt="Post image" style="max-width: 50%; height: auto;">
+                                                            </div>
+                                                        {% endif %}
+                                                        {% if post.audio %}
+                                                            <div class="post-audio">
+                                                                <audio controls>
+                                                                    <source src="{{ post.audio.url }}" type="audio/mpeg">
+                                                                    Ваш браузер не підтримує відтворення аудіо.
+                                                                </audio>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    <hr>
+                                                    <div class="ques-icon-info3293"> 
+                                                        <a href="#"><i class="fa fa-star" aria-hidden="true"> 0 </i> </a> 
+                                                        <a href="#"><i class="fa fa-folder" aria-hidden="true"> wordpress</i></a> 
+                                                        <a href="#"><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a> 
+                                                        <a href="#"><i class="fa fa-question-circle-o" aria-hidden="true"> Question</i></a>
+                                                        <a href="#"><i class="fa fa-bug" aria-hidden="true"> Report</i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <p>Немає постів.</p>
+                                {% endfor %}
+                            
+                                {% if no_response_posts.paginator.num_pages > 1 %}
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination">
+                                            {% if no_response_posts.has_previous %}
+                                                <li><a href="?filter=no_response&page={{ no_response_posts.previous_page_number }}">&laquo;</a></li>
+                                            {% else %}
+                                                <li class="disabled"><span>&laquo;</span></li>
+                                            {% endif %}
+
+                                            {% for num in no_response_posts.paginator.page_range %}
+                                                {% if no_response_posts.number == num %}
+                                                    <li class="active"><span>{{ num }}</span></li>
+                                                {% else %}
+                                                    <li><a href="?filter=no_response&page={{ num }}">{{ num }}</a></li>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if no_response_posts.has_next %}
+                                                <li><a href="?filter=no_response&page={{ no_response_posts.next_page_number }}">&raquo;</a></li>
+                                            {% else %}
+                                                <li class="disabled"><span>&raquo;</span></li>
+                                            {% endif %}
+                                        </ul>
+                                    </nav>
+                                {% endif %}
+                            </section>
+                            <section id="content4" style="display: none;">
+                                {% for post in popular_posts %}
+                                    <div class="question-type2033">
+                                        <div class="row">
+                                            <div class="col-md-1">
+                                                <div class="left-user12923 left-user12923-repeat">
+                                                    {% if post.author.socialaccount_set.exists %}
+                                                        {% with post.author.socialaccount_set.first as social_account %}
+                                                            <img src="{{ social_account.get_avatar_url }}" alt="Avatar">
+                                                        {% endwith %}
+                                                    {% elif post.author.userprofile.avatar %}
+                                                        <img src="{{ post.author.userprofile.avatar.url }}" alt="Avatar">
+                                                    {% else %}
+                                                        <img src="{{ DEFAULT_AVATAR_URL }}" alt="Default avatar">
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="right-description893">
+                                                    <div id="que-hedder2983">
+                                                        <h3><a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a></h3>
+                                                    </div>
+                                                    <div class="ques-details10018">
+                                                        <p>{{ post.content|safe }}</p>
+                                                        {% if post.image %}
+                                                            <div class="post-image">
+                                                                <img src="{{ post.image.url }}" alt="Post image" style="max-width: 50%; height: auto;">
+                                                            </div>
+                                                        {% endif %}
+                                                        {% if post.audio %}
+                                                            <div class="post-audio">
+                                                                <audio controls>
+                                                                    <source src="{{ post.audio.url }}" type="audio/mpeg">
+                                                                    Ваш браузер не підтримує відтворення аудіо.
+                                                                </audio>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                    <hr>
+                                                    <div class="ques-icon-info3293"> 
+                                                        <a href="#"><i class="fa fa-star" aria-hidden="true"> 0 </i> </a> 
+                                                        <a href="#"><i class="fa fa-folder" aria-hidden="true"> wordpress</i></a> 
+                                                        <a href="#"><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a> 
+                                                        <a href="#"><i class="fa fa-question-circle-o" aria-hidden="true"> Question</i></a>
+                                                        <a href="#"><i class="fa fa-bug" aria-hidden="true"> Report</i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <p>Немає постів.</p>
+                                {% endfor %}
+                            
+                                {% if popular_posts.paginator.num_pages > 1 %}
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination">
+                                            {% if popular_posts.has_previous %}
+                                                <li><a href="?filter=popular&page={{ popular_posts.previous_page_number }}">&laquo;</a></li>
+                                            {% else %}
+                                                <li class="disabled"><span>&laquo;</span></li>
+                                            {% endif %}
+
+                                            {% for num in popular_posts.paginator.page_range %}
+                                                {% if popular_posts.number == num %}
+                                                    <li class="active"><span>{{ num }}</span></li>
+                                                {% else %}
+                                                    <li><a href="?filter=popular&page={{ num }}">{{ num }}</a></li>
+                                                {% endif %}
+                                            {% endfor %}
+
+                                            {% if popular_posts.has_next %}
+                                                <li><a href="?filter=popular&page={{ popular_posts.next_page_number }}">&raquo;</a></li>
+                                            {% else %}
+                                                <li class="disabled"><span>&raquo;</span></li>
+                                            {% endif %}
+                                        </ul>
+                                    </nav>
+                                {% endif %}
+                            </section>
+                        </div>
+                    </div>
+                    <aside class="col-md-3 sidebar97239">
+                        <div class="status-part3821">
+                            <h4>stats</h4> <a><i class="fa fa-question-circle" aria-hidden="true"> Question({{ post_count }})</i></a> <i class="fa fa-comment" aria-hidden="true"> Answers({{ comment_count }})</i> 
+                        </div>
+                        <div class="categori-part329">
+                            <h4>Category</h4>
+                            <ul>
+                                <li><a href="#">web developer</a></li>
+                                <li><a href="#">Andriod developer</a></li>
+                                <li><a href="#">grapics developer</a></li>
+                                <li><a href="#">web developer</a></li>
+                            </ul>
+                        </div>
+                        <div class="recent-post3290">
+                            <h4>Recent Posts</h4>
+                            {% if random_posts %}
+                                {% for post in random_posts %}
+                                    <div class="post-details021">
+                                        <a href="{% url 'post_detail' post.slug %}">
+                                            <h5>{{ post.title }}</h5>
+                                        </a>
+                                        <p>{{ post.content|truncatewords:12 }}</p>
+                                        <small style="color: #848991">{{ post.created_at|date:"F d, Y" }}</small>
+                                        <hr>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p>No recent posts.</p>
+                            {% endif %}
+                        </div>                        
+                    </aside>
+                </div>
+            </div>
+        </section>
+        <section class="footer-social">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Copyright 2025 Ask me | <strong>Team Atlantida</strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const filterRadios = document.querySelectorAll('input[name="filter"]');
+                const sections = {
+                    recent_post: document.getElementById('content1'),
+                    most_response: document.getElementById('content2'),
+                    no_response: document.getElementById('content3'),
+                    popular_post: document.getElementById('content4'),
+                };
+            
+                function showSection(selected) {
+                    Object.keys(sections).forEach(key => {
+                        sections[key].style.display = key === selected ? 'block' : 'none';
                     });
-            }
-
-            if (e.target.classList.contains("edit-comment-btn")) {
-                const commentDiv = e.target.closest(".comment");
-                const contentEl = commentDiv.querySelector(".comment-content");
-                const originalText = contentEl.textContent;
-                const commentId = commentDiv.dataset.commentId;
-
-                const newContent = prompt("Редагувати коментар:", originalText);
-                if (newContent && newContent !== originalText) {
-                    const csrf = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-                    fetch("{% url 'edit_comment' %}", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        },
-                        body: `csrfmiddlewaretoken=${csrf}&comment_id=${commentId}&content=${encodeURIComponent(newContent)}`
-                    })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                contentEl.textContent = data.new_content;
-                            }
-                        });
-                    
                 }
-            }
-        });
-    });
-    </script>
-</body>
+            
+                filterRadios.forEach(radio => {
+                    radio.addEventListener('change', function () {
+                        showSection(this.value);
+                        localStorage.setItem('selectedFilter', this.value); 
+                    });
+                });
+            
+                const savedFilter = localStorage.getItem('selectedFilter') || 'recent_post';
+                document.querySelector(`input[value="${savedFilter}"]`).checked = true;
+                showSection(savedFilter);
+            });
+        </script>
+    </body>
 </html>

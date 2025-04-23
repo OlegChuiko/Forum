@@ -1,35 +1,82 @@
 {% load static %}
 {% load socialaccount %}
 <!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Реєстрація</title>
-    <link rel="stylesheet" href="{% static 'css/form/form.css' %}">
-</head>
-<body>
-    <div class="container">
-        <h1>Реєстрація на форум</h1>
-        
-        {% if user.is_authenticated %}
-            <script type="text/javascript">
-                window.location.href = "{% url 'index' %}";
-            </script>
-        {% else %}
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}  <!-- Вивести форму -->
-                <button type="submit">Зареєструватися</button>
-            </form>
-            <p>Вже маєте акаунт? <a href="{% url 'login' %}">Увійти</a></p>
-        {% endif %}
+<html >
+    <head>
+        <meta charset="UTF-8">
+        <meta name="title" content="Ask online Form">
+        <meta name="description" content="The Ask is a bootstrap design help desk, support forum website template coded and designed with bootstrap Design, Bootstrap, HTML5 and CSS. Ask ideal for wiki sites, knowledge base sites, support forum sites">
+        <meta name="keywords" content="HTML, CSS, JavaScript,Bootstrap,js,Forum,webstagram ,webdesign ,website ,web ,webdesigner ,webdevelopment">
+        <meta name="robots" content="index, nofollow">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="language" content="English">
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+        <link rel="stylesheet" href="{% static 'css/form/loginstyle.css' %}">
+    </head>
+    <body>
+    
+        <div class="modal-wrap">
 
-        <hr>
-        <h3>Або зареєструйтесь через Google</h3>
-        <a href="{% provider_login_url 'google' %}">
-            <button type="button">Реєстрація через Google</button>
-        </a>
-    </div>
-</body>
+            <div class="modal-bodies">
+                <div class="modal-body modal-body-step-1 is-showing">
+                <div class="title">Sign Up</div>
+                <div class="description">Hello there, Register Form</div>
+                    {% if user.is_authenticated %}
+                        <script type="text/javascript">
+                            window.location.href = "{% url 'index' %}";
+                        </script>
+                    {% else %}
+                    <form method="post">
+                        {% csrf_token %}
+                    
+                        {% if form.is_bound %}
+                            {{ form.non_field_errors }}
+                        {% endif %}
+                    
+                        <p>
+                            {{form.username}}
+                            {% if form.username.errors and form.is_bound %}
+                                <span style="color: red;">{{ form.username.errors }}</span>
+                            {% endif %}
+                        </p>
+                        <p>
+                            {{form.email}}
+                            {% if form.email.errors and form.is_bound %}
+                                <span style="color: red;">{{ form.email.errors }}</span>
+                            {% endif %}
+                        </p>
+                        <p>
+                            {{ form.password1}}
+                            {% if form.password1.errors and form.is_bound %}
+                                <span style="color: red;">{{ form.password1.errors }}</span>
+                            {% endif %}
+                        </p>
+                        <p>
+                            {{ form.password2 }}
+                            {% if form.password2.errors and form.is_bound %}
+                                <span style="color: red;">{{ form.password2.errors }}</span>
+                            {% endif %}
+                        </p>
+                    
+                        <div class="col-md-4">
+                            <div class="row text-center sign-with">
+                                <div class="col-md-12">
+                                    <h3>Sign in with</h3>
+                                </div>
+                                <div class="col-md-12 sign-in28912">
+                                    <div class="btn-group btn-group-justified">
+                                        <button class="button" type="submit">Sign Up</button>
+                                        <a href="{% provider_login_url 'google' %}" class="btn btn-danger btn-danger37883">Google</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+    </body>
 </html>

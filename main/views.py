@@ -1,67 +1,117 @@
-from time import localtime
-from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
-from django.views.decorators.http import require_POST
+from main.models import Post, Like, Dislike,Comment, UserProfile
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
-from main.models import Post, Like, Dislike,Comment
-from django.contrib.auth.models import User
-from django.templatetags.static import static
-
-
 from allauth.socialaccount.models import SocialAccount
+from django.views.decorators.http import require_POST
+from django.core.paginator import Paginator
+from django.contrib.auth.models import User
+from django.contrib.auth import logout
+from django.http import JsonResponse
+from django.db.models import Count
+from django.utils import timezone
+from datetime import timedelta
+from forum import settings
+import bleach
+import random
+
+
+def get_random_recent_posts(count=3, days=7):
+    recent_posts = Post.objects.filter(created_at__gte=timezone.now() - timedelta(days=days))
+    recent_posts_list = list(recent_posts)
+
+    if len(recent_posts_list) < count:
+        all_posts = list(Post.objects.all())
+        return random.sample(all_posts, min(count, len(all_posts)))
+
+    return random.sample(recent_posts_list, count)
+
+random_posts = get_random_recent_posts()
 
 @login_required()
 def index(request):
-    if request.method == "POST":
-        post_id = request.POST.get("post_id")
-        content = request.POST.get("comment_content")
+     
+    all_posts = Post.objects.annotate(
+    comment_count=Count('comments'),
+    like_count=Count('likes')
+    )
 
-        if post_id and content:
-            post = get_object_or_404(Post, id=post_id)
-            Comment.objects.create(post=post, author=request.user, content=content)
-            return redirect('index')  # оновлення сторінки після коментаря
+    recent_list = all_posts.order_by('-created_at')
+    most_response_list = all_posts.filter(comment_count__gt=0).order_by('-comment_count', '-created_at')
+    no_response_list = all_posts.filter(comment_count=0).order_by('-created_at')
+    popular_list = all_posts.order_by('-like_count', '-created_at')
 
-    posts = Post.objects.all().prefetch_related('like_set', 'dislike_set', 'comments')
+    page_number = request.GET.get('page')
 
-    for post in posts:
-        post.user_liked = post.like_set.filter(user=request.user).exists()
-        post.user_disliked = post.dislike_set.filter(user=request.user).exists()
-        post.likes = post.like_set.count()
-        post.dislikes = post.dislike_set.count()
+    recent_paginator = Paginator(recent_list, 5)
+    most_response_paginator = Paginator(most_response_list, 5)
+    no_response_paginator = Paginator(no_response_list, 5)
+    popular_paginator = Paginator(popular_list, 5)
 
-    return render(request, 'main/index.html', {'posts': posts})
+    user = request.user
+    post_count = Post.objects.filter(author=user).count()
+    comment_count = Comment.objects.filter(author=user).count()
 
+    context = {
+        'recent_posts': recent_paginator.get_page(page_number),
+        'most_response_posts': most_response_paginator.get_page(page_number),
+        'no_response_posts': no_response_paginator.get_page(page_number),
+        'popular_posts': popular_paginator.get_page(page_number),
+        'random_posts': random_posts,
+        'post_count': post_count,
+        'comment_count': comment_count
+    }
 
+    return render(request, 'main/index.html', context)
+
+@login_required()
 def user_logout(request):
     logout(request)  
-    return redirect('form')
+    return redirect('login')
 
 @login_required
 def create_post(request):
     if request.method == "POST":
         title = request.POST.get("title")
-        content = request.POST.get("content")
-        image = request.FILES.get('image')
-        audio = request.FILES.get('audio')  # Audio
+        image = request.FILES.get("image")
+        audio = request.FILES.get("audio")
+
+        ALLOWED_TAGS = [
+            'p', 'br', 'b', 'i', 'u', 'em', 'strong', 'ul', 'ol', 'li', 'span'
+        ]
+        ALLOWED_ATTRIBUTES = {
+            'span': ['style'],
+        }
+
+        raw_content = request.POST.get("content") 
+
+        clean_content = bleach.clean(
+            raw_content,
+            tags=ALLOWED_TAGS,
+            attributes=ALLOWED_ATTRIBUTES,
+            strip=True
+        )
 
         post = Post(
             title=title,
-            content=content,
+            content=clean_content,
             author=request.user,
             image=image,
             audio=audio
         )
         post.save()
         return redirect('index')
-    
-    return render(request, 'main/create_post.html')
+    user = request.user
+    post_count = Post.objects.filter(author=user).count()
+    comment_count = Comment.objects.filter(author=user).count()
 
-def like_dislike(request, post_id):
+    return render(request, 'main/create_post.html',{'random_posts': random_posts,'post_count':post_count,'comment_count':comment_count})
+
+@login_required()
+def like_dislike(request, slug):
     if not request.user.is_authenticated:
         return JsonResponse({"error": "User not authenticated."}, status=401)
 
-    post = get_object_or_404(Post, id=post_id)
+    post = get_object_or_404(Post, slug=slug)
     user = request.user
 
     if request.method == 'POST':
@@ -112,17 +162,15 @@ def profile_view(request, username):
 
 @require_POST
 @login_required
-def add_comment(request):
-    post_id = request.POST.get("post_id")
+def add_comment(request, slug):
     content = request.POST.get("content")
 
-    if not post_id or not content:
+    if not content:
         return JsonResponse({"error": "Некоректні дані"}, status=400)
 
-    post = get_object_or_404(Post, id=post_id)
+    post = get_object_or_404(Post, slug=slug)
     comment = Comment.objects.create(post=post, author=request.user, content=content)
 
-    # Отримуємо аватарку
     avatar_url = ""
     social_account = SocialAccount.objects.filter(user=request.user).first()
     if social_account and social_account.get_avatar_url():
@@ -130,7 +178,7 @@ def add_comment(request):
     elif hasattr(request.user, "userprofile") and request.user.userprofile.avatar:
         avatar_url = request.user.userprofile.avatar.url
     else:
-        avatar_url = static('avatars/default.png')  # default avatar
+        avatar_url = settings.DEFAULT_AVATAR_URL 
 
     return JsonResponse({
         "comment_id": comment.id,
@@ -176,3 +224,61 @@ def edit_comment(request):
 
     except Comment.DoesNotExist:
         return JsonResponse({'error': 'Коментар не знайдено.'}, status=404)
+
+
+@login_required
+def update_avatar(request):
+    if request.method == 'POST' and request.FILES.get('avatar'):
+        profile, created = UserProfile.objects.get_or_create(user=request.user)
+        profile.avatar = request.FILES['avatar']
+        profile.save()
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+@login_required()
+def post_detail(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    comments = Comment.objects.filter(post=post).order_by('-created_at')
+
+    if request.user.is_authenticated:
+        try:
+            user_profile = request.user.userprofile
+        except UserProfile.DoesNotExist:
+            user_profile = None  
+
+        if user_profile and not user_profile.viewed_posts.filter(id=post.id).exists():
+            post.views += 1
+            post.save()
+
+            user_profile.viewed_posts.add(post)
+
+    user = request.user
+    post_count = Post.objects.filter(author=user).count()
+    comment_count = Comment.objects.filter(author=user).count()
+
+    related_posts = Post.objects.filter(author=post.author)\
+        .exclude(id=post.id)\
+        .order_by('-created_at')[:4]
+    
+    return render(request, 'main/post-details.html', {
+        'post': post,
+        'comments': comments,
+        'random_posts': random_posts,
+        'post_count':post_count,
+        'comment_count':comment_count,
+        'related_posts': related_posts
+    })
+
+@login_required()
+def search_results(request):
+    query = request.GET.get('query', '')
+    results = []
+
+    if query:
+        results = Post.objects.filter(title__icontains=query) 
+
+    return render(request, 'main/search.html', {
+        'results': results,
+        'query': query
+    })
+
