@@ -1,4 +1,5 @@
 {% load static %}
+{% load cache %} 
 {% load tz %}
 
 <!DOCTYPE html>
@@ -120,6 +121,7 @@
                             <input id="tab4" type="radio" name="filter" value="popular_post">
                             <label for="tab4">Popular Post</label>
                             
+                        {% cache 300 posts_fragment request.GET.page request.GET.filter %}
                             <section id="content1">
                                 {% for post in recent_posts %}
                                     <div class="question-type2033">
@@ -160,12 +162,30 @@
                                                     </div>
                                                     <hr>
                                                     <div class="ques-icon-info3293"> 
-                                                        <a href="#"><i class="fa fa-star" aria-hidden="true"> 0 </i> </a> 
-                                                        <a href="#"><i class="fa fa-folder" aria-hidden="true"> wordpress</i></a> 
+                                                        <a href="{% url 'posts_by_category' post.category.slug %}"><i class="fa fa-hashtag" style="color: black;" aria-hidden="true"> {{ post.category.name }} </i></a> 
                                                         <a href="#"><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a> 
                                                         <a href="#"><i class="fa fa-question-circle-o" aria-hidden="true"> Question</i></a>
                                                         <a href="#"><i class="fa fa-bug" aria-hidden="true"> Report</i></a>
                                                     </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="ques-type302">
+                                                    <a>
+                                                        <button type="button" class="q-type238">
+                                                            <i class="fa fa-comment" aria-hidden="true">
+                                                                <span id="comments-{{ post.id }}">...</span>
+                                                            </i>
+                                                        </button>
+                                                    </a>
+                                                    
+                                                    <a>
+                                                        <button type="button" class="q-type23 button-ques2973">
+                                                            <i class="fa fa-user-circle-o" aria-hidden="true">
+                                                                <span id="views-{{ post.id }}">...</span>
+                                                            </i>
+                                                        </button>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -240,12 +260,28 @@
                                                     </div>
                                                     <hr>
                                                     <div class="ques-icon-info3293"> 
-                                                        <a href="#"><i class="fa fa-star" aria-hidden="true"> 0 </i> </a> 
-                                                        <a href="#"><i class="fa fa-folder" aria-hidden="true"> wordpress</i></a> 
-                                                        <a href="#"><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a> 
+                                                        <a href="{% url 'posts_by_category' post.category.slug %}"><i class="fa fa-hashtag" style="color: black;" aria-hidden="true"> {{ post.category.name }} </i></a>                                                        <a href="#"><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a> 
                                                         <a href="#"><i class="fa fa-question-circle-o" aria-hidden="true"> Question</i></a>
                                                         <a href="#"><i class="fa fa-bug" aria-hidden="true"> Report</i></a>
                                                     </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="ques-type302">
+                                                    <a>
+                                                        <button type="button" class="q-type238">
+                                                            <i class="fa fa-comment" aria-hidden="true">
+                                                                <span id="comments-{{ post.id }}">...</span>
+                                                            </i>
+                                                        </button>
+                                                    </a>
+                                                    <a>
+                                                        <button type="button" class="q-type23 button-ques2973">
+                                                            <i class="fa fa-user-circle-o" aria-hidden="true">
+                                                                <span id="views-{{ post.id }}">...</span>
+                                                            </i>
+                                                        </button>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -320,12 +356,29 @@
                                                     </div>
                                                     <hr>
                                                     <div class="ques-icon-info3293"> 
-                                                        <a href="#"><i class="fa fa-star" aria-hidden="true"> 0 </i> </a> 
-                                                        <a href="#"><i class="fa fa-folder" aria-hidden="true"> wordpress</i></a> 
-                                                        <a href="#"><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a> 
+                                                        <a href="{% url 'posts_by_category' post.category.slug %}"><i class="fa fa-hashtag" style="color: black;" aria-hidden="true"> {{ post.category.name }} </i></a>                                                        <a href="#"><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a> 
                                                         <a href="#"><i class="fa fa-question-circle-o" aria-hidden="true"> Question</i></a>
                                                         <a href="#"><i class="fa fa-bug" aria-hidden="true"> Report</i></a>
                                                     </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="ques-type302">
+                                                    <a>
+                                                        <button type="button" class="q-type238">
+                                                            <i class="fa fa-comment" aria-hidden="true">
+                                                                <span id="comments-{{ post.id }}">...</span>
+                                                            </i>
+                                                        </button>
+                                                    </a>
+                                                    
+                                                    <a>
+                                                        <button type="button" class="q-type23 button-ques2973">
+                                                            <i class="fa fa-user-circle-o" aria-hidden="true">
+                                                                <span id="views-{{ post.id }}">...</span>
+                                                            </i>
+                                                        </button>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -400,12 +453,29 @@
                                                     </div>
                                                     <hr>
                                                     <div class="ques-icon-info3293"> 
-                                                        <a href="#"><i class="fa fa-star" aria-hidden="true"> 0 </i> </a> 
-                                                        <a href="#"><i class="fa fa-folder" aria-hidden="true"> wordpress</i></a> 
-                                                        <a href="#"><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a> 
+                                                        <a href="{% url 'posts_by_category' post.category.slug %}"><i class="fa fa-hashtag" style="color: black;" aria-hidden="true"> {{ post.category.name }} </i></a>                                                        <a href="#"><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a> 
                                                         <a href="#"><i class="fa fa-question-circle-o" aria-hidden="true"> Question</i></a>
                                                         <a href="#"><i class="fa fa-bug" aria-hidden="true"> Report</i></a>
                                                     </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="ques-type302">
+                                                    <a>
+                                                        <button type="button" class="q-type238">
+                                                            <i class="fa fa-comment" aria-hidden="true">
+                                                                <span id="comments-{{ post.id }}">...</span>
+                                                            </i>
+                                                        </button>
+                                                    </a>
+                                                    
+                                                    <a>
+                                                        <button type="button" class="q-type23 button-ques2973">
+                                                            <i class="fa fa-user-circle-o" aria-hidden="true">
+                                                                <span id="views-{{ post.id }}">...</span>
+                                                            </i>
+                                                        </button>
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -440,6 +510,7 @@
                                     </nav>
                                 {% endif %}
                             </section>
+                        {% endcache %}
                         </div>
                     </div>
                     <aside class="col-md-3 sidebar97239">
@@ -448,11 +519,33 @@
                         </div>
                         <div class="categori-part329">
                             <h4>Category</h4>
-                            <ul>
-                                <li><a href="#">web developer</a></li>
-                                <li><a href="#">Andriod developer</a></li>
-                                <li><a href="#">grapics developer</a></li>
-                                <li><a href="#">web developer</a></li>
+                            <ul id="categories_recent">
+                                {% for category in categories_for_recent %}
+                                    <li><a href="{% url 'posts_by_category' category.slug %}">#{{ category.name }}</a></li>
+                                {% empty %}
+                                    <li>No categories found</li>
+                                {% endfor %}
+                            </ul>
+                            <ul id="categories_most_response" style="display:none;">
+                                {% for category in categories_for_most_response %}
+                                    <li><a href="{% url 'posts_by_category' category.slug %}">#{{ category.name }}</a></li>
+                                {% empty %}
+                                    <li>No categories found</li>
+                                {% endfor %}
+                            </ul>
+                            <ul id="categories_no_response" style="display:none;">
+                                {% for category in categories_for_no_response %}
+                                    <li><a href="{% url 'posts_by_category' category.slug %}">#{{ category.name }}</a></li>
+                                {% empty %}
+                                    <li>No categories found</li>
+                                {% endfor %}
+                            </ul>
+                            <ul id="categories_popular" style="display:none;">
+                                {% for category in categories_for_popular %}
+                                    <li><a href="{% url 'posts_by_category' category.slug %}">#{{ category.name }}</a></li>
+                                {% empty %}
+                                    <li>No categories found</li>
+                                {% endfor %}
                             </ul>
                         </div>
                         <div class="recent-post3290">
@@ -463,7 +556,7 @@
                                         <a href="{% url 'post_detail' post.slug %}">
                                             <h5>{{ post.title }}</h5>
                                         </a>
-                                        <p>{{ post.content|truncatewords:12 }}</p>
+                                        <p>{{ post.content|truncatewords:12|safe }}</p>
                                         <small style="color: #848991">{{ post.created_at|date:"F d, Y" }}</small>
                                         <hr>
                                     </div>
@@ -488,33 +581,6 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const filterRadios = document.querySelectorAll('input[name="filter"]');
-                const sections = {
-                    recent_post: document.getElementById('content1'),
-                    most_response: document.getElementById('content2'),
-                    no_response: document.getElementById('content3'),
-                    popular_post: document.getElementById('content4'),
-                };
-            
-                function showSection(selected) {
-                    Object.keys(sections).forEach(key => {
-                        sections[key].style.display = key === selected ? 'block' : 'none';
-                    });
-                }
-            
-                filterRadios.forEach(radio => {
-                    radio.addEventListener('change', function () {
-                        showSection(this.value);
-                        localStorage.setItem('selectedFilter', this.value); 
-                    });
-                });
-            
-                const savedFilter = localStorage.getItem('selectedFilter') || 'recent_post';
-                document.querySelector(`input[value="${savedFilter}"]`).checked = true;
-                showSection(savedFilter);
-            });
-        </script>
+        <script src="{% static 'js/postCounterAndFilter.js' %}"></script>           
     </body>
 </html>

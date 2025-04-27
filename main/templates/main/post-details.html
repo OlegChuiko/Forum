@@ -2,394 +2,340 @@
 {% load tz %}
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="title" content="Ask online Form">
+        <meta name="description" content="The Ask is a bootstrap design help desk, support forum website template coded and designed with bootstrap Design, Bootstrap, HTML5 and CSS. Ask ideal for wiki sites, knowledge base sites, support forum sites">
+        <meta name="keywords" content="HTML, CSS, JavaScript,Bootstrap,js,Forum,webstagram ,webdesign ,website ,web ,webdesigner ,webdevelopment">
+        <meta name="robots" content="index, nofollow">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="language" content="English">
+        <link href="{% static 'css/main/responsive.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/main/bootstrap.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/main/style.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/main/animate.css' %}" rel="stylesheet" type="text/css"> 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="title" content="Ask online Form">
-    <meta name="description" content="The Ask is a bootstrap design help desk, support forum website template coded and designed with bootstrap Design, Bootstrap, HTML5 and CSS. Ask ideal for wiki sites, knowledge base sites, support forum sites">
-    <meta name="keywords" content="HTML, CSS, JavaScript,Bootstrap,js,Forum,webstagram ,webdesign ,website ,web ,webdesigner ,webdevelopment">
-    <meta name="robots" content="index, nofollow">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="language" content="English">
-    <link href="{% static 'css/main/responsive.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'css/main/bootstrap.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'css/main/style.css' %}" rel="stylesheet" type="text/css">
-    <link href="{% static 'css/main/animate.css' %}" rel="stylesheet" type="text/css"> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
-
-<body>
-    <div class="top-bar">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="navbar-menu-left-side239">
-                        <ul>
-                            <li><a href="contact_us.html" target="_blank"><i class="fa fa-envelope-o" aria-hidden="true"></i>Contact</a></li>
-                            <li><a href="#" target="_blank"><i class="fa fa-headphones" aria-hidden="true"></i>Support</a></li>
-                            <li><a href="{% url 'logout' %}"><i class="fa fa-user" aria-hidden="true"></i>Logout</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="navbar-serch-right-side">
-                        <form class="navbar-form" role="search" action="{% url 'search_results' %}">
-                            <div class="input-group add-on">
-                                <input class="form-control form-control222" placeholder="Search" name="srch-term" id="srch-term" type="text" value="{{ request.GET.query }}">
-                                <div class="input-group-btn">
-                                    <button class="btn btn-default btn-default2913" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="top-menu-bottom932">
-        <nav class="navbar navbar-default">
+    <body>
+        <div class="top-bar">
             <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-                    <a class="navbar-brand" href="#"><img src="image/logo.png" alt="Logo"></a>
-                </div>
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav"> </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="{% url 'index'%}">Home</a></li>
-                        <li><a href="{% url 'create_post'%}">Ask Question</a></li>
-                        <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Question <span class="caret"></span></a>
-                            <ul class="dropdown-menu animated zoomIn">
-                                <li><a href="category.html">Question Category</a></li>
-                                <li><a href="category.html">HTML</a></li>
-                                <li><a href="category.html">CSS</a></li>
-                                <li><a href="category.html">Javascript</a></li>
-                                <li><a href="category.html">Bootstrap</a></li>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="navbar-menu-left-side239">
+                            <ul>
+                                <li><a href="contact_us.html" target="_blank"><i class="fa fa-envelope-o" aria-hidden="true"></i>Contact</a></li>
+                                <li><a href="#" target="_blank"><i class="fa fa-headphones" aria-hidden="true"></i>Support</a></li>
+                                <li><a href="{% url 'logout' %}"><i class="fa fa-user" aria-hidden="true"></i>Logout</a></li>
                             </ul>
-                        </li>
-                       
-                        <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog <span class="caret"></span></a>
-                            <ul class="dropdown-menu animated zoomIn">
-                                <li><a href="blog.html">Blog </a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Page <span class="caret"></span></a>
-                            <ul class="dropdown-menu animated zoomIn">
-                                <li><a href="contact_us.html"> Contact Us</a></li>
-                                <li><a href="ask_question.html"> Ask Question </a></li>
-                                <li><a href="post-deatils.html"> Post-Details </a></li>
-                                <li><a href="user.html">All User</a></li>
-                                <li><a href="#"> User Question </a></li>
-                                <li><a href="#"> Category </a></li>
-                            </ul>
-                        </li>
-                        <li><a href="contact_us.html">Contact us</a></li>
-                    </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="navbar-serch-right-side">
+                            <form class="navbar-form" role="search" action="{% url 'search_results' %}">
+                                <div class="input-group add-on">
+                                    <input class="form-control form-control222" placeholder="Search" name="srch-term" id="srch-term" type="text" value="{{ request.GET.query }}">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default btn-default2913" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </nav>
-    </div>
-    <section class="header-descriptin329">
-        <div class="container">
-            <h3>Post Details</h3>
-            <ol class="breadcrumb breadcrumb839">
-                <li><a href="{% url 'index'%}">Home</a></li>
-                <li class="active">{{ post.title }}</li>
-            </ol>
         </div>
-    </section>
-    <section class="main-content920">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-9">
-                    <div class="post-details">
-                        <div class="details-header923">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="post-title-left129">
-                                        <h3>{{ post.title }}</h3> </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="post-que-rep-rihght320"> <a href="#"><i class="fa fa-question-circle" aria-hidden="true"></i> Question</a> <a href="#" class="r-clor10">Report</a> </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="post-details-info1982">
-                            <p>{{ post.content|safe  }}</p>
-                            {% if post.image %}
-                                <div class="post-image">
-                                    <img src="{{ post.image.url }}" alt="Post image" style="max-width: 50%; height: auto;">
-                                </div>
-                            {% endif %}
-                            {% if post.audio %}
-                                <div class="post-audio">
-                                    <audio controls>
-                                        <source src="{{ post.audio.url }}" type="audio/mpeg">
-                                        Ваш браузер не підтримує відтворення аудіо.
-                                    </audio>
-                                </div>
-                            {% endif %}
-                            <hr>
-                            <div class="post-footer29032">
-                                <div class="l-side2023"> <a href="#"><i class="fa fa-star star2" aria-hidden="true">  5</i></a> <i class="fa fa-folder folder2" aria-hidden="true"> wordpress</i> <i class="fa fa-clock-o clock2" aria-hidden="true"> {{ post.created_at|timesince }} ago</i> <a href="#"><i class="fa fa-commenting commenting2" aria-hidden="true">{{ post.comments.count }} answer{% if post.comments.count != 1 %}s{% endif %}</i></a> <i class="fa fa-user user2" aria-hidden="true"> {{ post.views }} </i> </div>
-                                <div class="l-rightside39">
-                                    <button type="button" class="tolltip-button thumbs-up2" id="like-btn-{{ post.slug }}" data-toggle="tooltip" data-placement="bottom" data-slug="{{ post.slug }}" title="Like"{% if post.user_liked %}disabled{% endif %}><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button><span id="likes-{{ post.slug }}" class="single-question-vote-result">{{ post.likes }}</span>
-                                    <button type="button" class="tolltip-button  thumbs-down2" id="dislike-btn-{{ post.slug }}" data-toggle="tooltip" data-placement="bottom" data-slug="{{ post.slug }}" title="Dislike"{% if post.user_disliked %}disabled{% endif %}><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button> <span id="dislikes-{{ post.slug }}" class="single-question-vote-result">{{ post.dislikes }}</span>
-                                </div>
-                            </div>
-                        </div>
+        <div class="top-menu-bottom932">
+            <nav class="navbar navbar-default">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
+                        <a class="navbar-brand" href="#"><img src="image/logo.png" alt="Logo"></a>
                     </div>
-                    <div class="share-tags-page-content12092">
-                        <div class="l-share2093"> <i class="fa fa-share" aria-hidden="true"> Share</i> </div>
-                        <div class="R-tags309"> <i class="fa fa-tags" aria-hidden="true"> Wordpress, Question, Developer</i> </div>
-                    </div>
-                    <div class="author-details8392">
-                        {% if post.author.socialaccount_set.exists %}
-                            {% with post.author.socialaccount_set.first as social_account %}
-                            <div class="author-img202l"><img src="{{ social_account.get_avatar_url }}" alt="image">
-                            {% endwith %}
-                        {% elif post.author.userprofile.avatar %}
-                            <div class="author-img202l"><img src="{{ post.author.userprofile.avatar.url }}" alt="image">
-                        {% else %}
-                            <div class="author-img202l"><img src="{{ DEFAULT_AVATAR_URL }}" alt="image">
-                        {% endif %}
-                            <div class="au-image-overlay text-center"> <a href="#"><i class="fa fa-plus-square-o" aria-hidden="true"></i></a> </div>
-                    </div> 
-                    <span class="author-deatila04re">
-                        <h5>{{ post.author.username }}</h5>
-                        <p>{{ post.author.profile.bio|default:"Цей користувач ще не додав опис про себе." }}</p>
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav"> </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="{% url 'index'%}">Home</a></li>
+                            <li><a href="{% url 'create_post'%}">Ask Question</a></li>
+                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Question <span class="caret"></span></a>
+                                <ul class="dropdown-menu animated zoomIn">
+                                    <li><a href="category.html">Question Category</a></li>
+                                    <li><a href="category.html">HTML</a></li>
+                                    <li><a href="category.html">CSS</a></li>
+                                    <li><a href="category.html">Javascript</a></li>
+                                    <li><a href="category.html">Bootstrap</a></li>
+                                </ul>
+                            </li>
                         
-                    </span> </div>
-                    <div class="related3948-question-part">
-                        <h3>Related questions</h3>
-                        <hr>
-                        {% for related in related_posts %}
-                            <p>
-                                <a href="{% url 'post_detail' related.slug %}">
-                                    <i class="fa fa-angle-double-right" aria-hidden="true"></i> {{ related.title }}
-                                </a>
-                            </p>
-                        {% empty %}
-                            <p>Автор ще не має інших постів.</p>
-                        {% endfor %}
-                    </div>
-                    <div class="comment-list12993">
-                        <div class="container">
-                            <div class="row">
-                           
-                                <div class="comments-container">
-                                    <ul id="comments-list" class="comments-list">
-                                        {% for comment in comments %}
-                                        <li>
-                                            <div class="comment-main-level">
-                                                {% if comment.author.socialaccount_set.exists %}
-                                                    {% with comment.author.socialaccount_set.first as sa %}
-                                                        <div class="comment-avatar"><img src="{{ sa.get_avatar_url }}" alt="avatar" ></div>
-                                                    {% endwith %}
-                                                {% elif comment.author.userprofile.avatar %}
-                                                    <div class="comment-avatar"><img src="{{ comment.author.userprofile.avatar.url }}" alt="avatar"></div>
-                                                {% else %}
-                                                    <div class="comment-avatar"><img src="{{ DEFAULT_AVATAR_URL }}" alt="default"></div>
-                                                {% endif %}
-                                                <div class="comment-box">
-                                                    <div class="comment-head">
-                                                        <h6 class="comment-name"><a href="#">{{ comment.author.username }}</a></h6>
-                                                    </div>
-                                                    <div class="comment-content">
-                                                        {{ comment.content }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        {% empty %}
-                                            <li><p>Немає коментарів.</p></li>
-                                        {% endfor %}
-                                    </ul>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="comment289-box">
-                        <h3>Leave A Reply</h3>
-                        <hr>
-                        <form class="comment-form" action="{% url 'add_comment' slug=post.slug %}" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" name="slug" value="{{ post.slug }}">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="post9320-box">
-                                        <textarea name="content" required class="comment-text comment-input219882" placeholder="Enter Your Post"></textarea>
-                                    </div>
-                                    <button type="submit" class="pos393-submit">Post Your Answer</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div>
-
-                </div>
-                <aside class="col-md-3 sidebar97239">
-                    <div class="status-part3821">
-                        <h4>stats</h4> <a><i class="fa fa-question-circle" aria-hidden="true"> Question({{post_count}})</i></a> <i class="fa fa-comment" aria-hidden="true"> Answers({{comment_count}})</i> </div>
-                    <div class="categori-part329">
-                        <h4>Category</h4>
-                        <ul>
-                            <li><a href="#">web developer</a></li>
-                            <li><a href="#">Andriod developer</a></li>
-                            <li><a href="#">grapics developer</a></li>
-                            <li><a href="#">web developer</a></li>
+                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog <span class="caret"></span></a>
+                                <ul class="dropdown-menu animated zoomIn">
+                                    <li><a href="blog.html">Blog </a></li>
+                                </ul>
+                            </li>
+                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Page <span class="caret"></span></a>
+                                <ul class="dropdown-menu animated zoomIn">
+                                    <li><a href="contact_us.html"> Contact Us</a></li>
+                                    <li><a href="ask_question.html"> Ask Question </a></li>
+                                    <li><a href="post-deatils.html"> Post-Details </a></li>
+                                    <li><a href="user.html">All User</a></li>
+                                    <li><a href="#"> User Question </a></li>
+                                    <li><a href="#"> Category </a></li>
+                                </ul>
+                            </li>
+                            <li><a href="contact_us.html">Contact us</a></li>
                         </ul>
                     </div>
-                    <div class="recent-post3290">
-                        <h4>Recent Posts</h4>
-                        {% if random_posts %}
-                            {% for post in random_posts %}
-                                <div class="post-details021">
-                                    <a href="{% url 'post_detail' post.slug %}">
-                                        <h5>{{ post.title }}</h5>
-                                    </a>
-                                    <p>{{ post.content|truncatewords:12 }}</p>
-                                    <small style="color: #848991">{{ post.created_at|date:"F d, Y" }}</small>
-                                    <hr>
-                                </div>
-                            {% endfor %}
-                        {% else %}
-                            <p>No recent posts.</p>
-                        {% endif %}
-                    </div>      
-                </aside>
-            </div>
-        </div>
-    </section>
-    <section class="footer-social">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <p>Copyright 2017 Ask me | <strong>Sudo  Coder</strong></p>
                 </div>
-            </div>
+            </nav>
         </div>
-    </section>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function updateLikeDislike(slug, action) {
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-        
-            fetch(`/like/${slug}/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `csrfmiddlewaretoken=${csrfToken}&action=${action}`,
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.likes !== undefined && data.dislikes !== undefined) {
-                    const likesElement = document.getElementById(`likes-${slug}`);
-                    const dislikesElement = document.getElementById(`dislikes-${slug}`);
-        
-                    if (likesElement) likesElement.textContent = data.likes;
-                    if (dislikesElement) dislikesElement.textContent = data.dislikes;
-        
-                    const likeButton = document.getElementById(`like-btn-${slug}`);
-                    const dislikeButton = document.getElementById(`dislike-btn-${slug}`);
-        
-                    if (action === 'like') {
-                        likeButton.disabled = true;
-                        dislikeButton.disabled = false;
-                    } else if (action === 'dislike') {
-                        dislikeButton.disabled = true;
-                        likeButton.disabled = false;
-                    }
-                } else {
-                    console.log('Error:', data);
-                }
-            })
-            .catch(error => console.log('Error:', error));
-        }
-        
-        document.addEventListener('DOMContentLoaded', function () {
-            const likeButtons = document.querySelectorAll('.thumbs-up2');
-            const dislikeButtons = document.querySelectorAll('.thumbs-down2');
-        
-            likeButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const slug = button.getAttribute('data-slug'); 
-                    updateLikeDislike(slug, 'like');
-                });
-            });
-        
-            dislikeButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const slug = button.getAttribute('data-slug'); 
-                    updateLikeDislike(slug, 'dislike');
-                });
-            });
-        });
-
-        const commentForms = document.querySelectorAll('.comment-form');
-
-        commentForms.forEach(form => {
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-
-                const postId = form.getAttribute('data-post-id');
-                const textarea = form.querySelector('.comment-text');
-                const content = textarea.value.trim();
-                const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
-
-                if (!content) return;
-
-                fetch("{% url 'add_comment' slug=post.slug %}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `csrfmiddlewaretoken=${csrfToken}&post_id=${postId}&content=${encodeURIComponent(content)}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        alert(data.error);
-                        return;
-                    }
-
-                    const commentsSection = document.querySelector('#comments-list');
-                    const newComment = document.createElement('li');
-                    newComment.dataset.commentId = data.comment_id;
-                    newComment.innerHTML = `
-                        <div class="comment-main-level">
-                            <div class="comment-avatar">
-                                <img src="${data.avatar_url}" alt="avatar">
-                            </div>
-                            <div class="comment-box">
-                                <div class="comment-head">
-                                    <h6 class="comment-name"><a href="#">${data.author}</a></h6>
-                                    <!--
-                                        <button class="edit-comment-btn">Редагувати</button> 
-                                        <button class="delete-comment-btn">Видалити</button> 
-                                    -->
+        <section class="header-descriptin329">
+            <div class="container">
+                <h3>Post Details</h3>
+                <ol class="breadcrumb breadcrumb839">
+                    <li><a href="{% url 'index'%}">Home</a></li>
+                    <li class="active">{{ post.title }}</li>
+                </ol>
+            </div>
+        </section>
+        <section class="main-content920">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="post-details">
+                            <div class="details-header923">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="post-title-left129">
+                                            <h3>{{ post.title }}</h3> </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="post-que-rep-rihght320"> <a href="#"><i class="fa fa-question-circle" aria-hidden="true"></i> Question</a> <a href="#" class="r-clor10">Report</a> </div>
+                                    </div>
                                 </div>
-                                <div class="comment-content">${data.content}</div>
+                            </div>
+                            <div class="post-details-info1982">
+                                <p>{{ post.content|safe  }}</p>
+                                {% if post.image %}
+                                    <div class="post-image">
+                                        <img src="{{ post.image.url }}" alt="Post image" style="max-width: 50%; height: auto;">
+                                    </div>
+                                {% endif %}
+                                {% if post.audio %}
+                                    <div class="post-audio">
+                                        <audio controls>
+                                            <source src="{{ post.audio.url }}" type="audio/mpeg">
+                                            Ваш браузер не підтримує відтворення аудіо.
+                                        </audio>
+                                    </div>
+                                {% endif %}
+                                <hr>
+                                <div class="post-footer29032">
+                                    <div class="l-side2023"> <i class="fa fa-hashtag folder2" style"color: back;" aria-hidden="true"> {{post.category.name}} </i> <i class="fa fa-clock-o clock2" aria-hidden="true"> {{ post.created_at|timesince }} ago</i> <a href="#"><i class="fa fa-commenting commenting2" aria-hidden="true">{{ post.comments.count }} answer{% if post.comments.count != 1 %}s{% endif %}</i></a> <i class="fa fa-user user2" aria-hidden="true"> {{ post.views }} </i> </div>
+                                    <div class="l-rightside39">
+                                        <button type="button" class="tolltip-button thumbs-up2" id="like-btn-{{ post.slug }}" data-toggle="tooltip" data-placement="bottom" data-slug="{{ post.slug }}" title="Like"{% if post.user_liked %}disabled{% endif %}><i class="fa fa-thumbs-o-up " aria-hidden="true"></i></button><span id="likes-{{ post.slug }}" class="single-question-vote-result">{{ post.likes }}</span>
+                                        <button type="button" class="tolltip-button  thumbs-down2" id="dislike-btn-{{ post.slug }}" data-toggle="tooltip" data-placement="bottom" data-slug="{{ post.slug }}" title="Dislike"{% if post.user_disliked %}disabled{% endif %}><i class="fa fa-thumbs-o-down" aria-hidden="true"></i></button> <span id="dislikes-{{ post.slug }}" class="single-question-vote-result">{{ post.dislikes }}</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    `;
-                    commentsSection.prepend(newComment);
-                    textarea.value = '';
-                })
-                .catch(err => {
-                    console.error('Помилка при додаванні коментаря:', err);
+                        <div class="share-tags-page-content12092">
+                            <div class="l-share2093"> <i class="fa fa-share" aria-hidden="true"> Share</i> </div>
+                            <div class="R-tags309"> <i class="fa fa-tags" aria-hidden="true"> Wordpress, Question, Developer</i> </div>
+                        </div>
+                        <div class="author-details8392">
+                            {% if post.author.socialaccount_set.exists %}
+                                {% with post.author.socialaccount_set.first as social_account %}
+                                <div class="author-img202l"><img src="{{ social_account.get_avatar_url }}" alt="image">
+                                {% endwith %}
+                            {% elif post.author.userprofile.avatar %}
+                                <div class="author-img202l"><img src="{{ post.author.userprofile.avatar.url }}" alt="image">
+                            {% else %}
+                                <div class="author-img202l"><img src="{{ DEFAULT_AVATAR_URL }}" alt="image">
+                            {% endif %}
+                                <div class="au-image-overlay text-center"> <a href="#"><i class="fa fa-plus-square-o" aria-hidden="true"></i></a> </div>
+                        </div> 
+                        <span class="author-deatila04re">
+                            <h5>{{ post.author.username }}</h5>
+                            <p>{{ post.author.profile.bio|default:"Цей користувач ще не додав опис про себе." }}</p>
+                            
+                        </span> </div>
+                        <div class="related3948-question-part">
+                            <h3>Related questions</h3>
+                            <hr>
+                            {% for related in related_posts %}
+                                <p>
+                                    <a href="{% url 'post_detail' related.slug %}">
+                                        <i class="fa fa-angle-double-right" aria-hidden="true"></i> {{ related.title }}
+                                    </a>
+                                </p>
+                            {% empty %}
+                                <p>Автор ще не має інших постів.</p>
+                            {% endfor %}
+                        </div>
+                        <div class="comment-list12993">
+                            <div class="container">
+                                <div class="row">
+                            
+                                    <div class="comments-container">
+                                        <ul id="comments-list" class="comments-list">
+                                            {% for comment in comments %}
+                                                <li>
+                                                    <div class="comment-main-level">
+                                                        {% if comment.author.socialaccount_set.exists %}
+                                                            {% with comment.author.socialaccount_set.first as sa %}
+                                                                <div class="comment-avatar"><img src="{{ sa.get_avatar_url }}" alt="avatar" ></div>
+                                                            {% endwith %}
+                                                        {% elif comment.author.userprofile.avatar %}
+                                                            <div class="comment-avatar"><img src="{{ comment.author.userprofile.avatar.url }}" alt="avatar"></div>
+                                                        {% else %}
+                                                            <div class="comment-avatar"><img src="{{ DEFAULT_AVATAR_URL }}" alt="default"></div>
+                                                        {% endif %}
+                                                        <div class="comment-box">
+                                                            <div class="comment-head">
+                                                                <h6 class="comment-name"><a href="#">{{ comment.author.username }}</a></h6>
+                                                            </div>
+                                                            <div class="comment-content">
+                                                                {{ comment.content }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            {% empty %}
+                                                <li><p>Немає коментарів.</p></li>
+                                            {% endfor %}
+                                        </ul>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="comment289-box">
+                            <h3>Leave A Reply</h3>
+                            <hr>
+                            <form class="comment-form" action="{% url 'add_comment' slug=post.slug %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="slug" value="{{ post.slug }}">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="post9320-box">
+                                            <textarea name="content" required class="comment-text comment-input219882" placeholder="Enter Your Post"></textarea>
+                                        </div>
+                                        <button type="submit" class="pos393-submit">Post Your Answer</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div>
+
+                    </div>
+                    <aside class="col-md-3 sidebar97239">
+                        <div class="status-part3821">
+                            <h4>stats</h4> <a><i class="fa fa-question-circle" aria-hidden="true"> Question({{post_count}})</i></a> <i class="fa fa-comment" aria-hidden="true"> Answers({{comment_count}})</i> </div>
+                        <div class="categori-part329">
+                            <h4>Category</h4>
+                            <ul>
+                                <li><a href="{% url 'posts_by_category' post.category.slug %}">#{{post.category.name}}</a></li>
+                            </ul>
+                        </div>
+                        <div class="recent-post3290">
+                            <h4>Recent Posts</h4>
+                            {% if random_posts %}
+                                {% for post in random_posts %}
+                                    <div class="post-details021">
+                                        <a href="{% url 'post_detail' post.slug %}">
+                                            <h5>{{ post.title }}</h5>
+                                        </a>
+                                        <p>{{ post.content|truncatewords:12|safe }}</p>
+                                        <small style="color: #848991">{{ post.created_at|date:"F d, Y" }}</small>
+                                        <hr>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p>No recent posts.</p>
+                            {% endif %}
+                        </div>      
+                    </aside>
+                </div>
+            </div>
+        </section>
+        <section class="footer-social">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>Copyright 2017 Ask me | <strong>Sudo  Coder</strong></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="{% static 'js/LikeDislikeComments.js' %}"></script>
+        <script>
+            const commentForms = document.querySelectorAll('.comment-form');
+
+            commentForms.forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const postId = form.getAttribute('data-post-id');
+                    const textarea = form.querySelector('.comment-text');
+                    const content = textarea.value.trim();
+                    const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                    if (!content) return;
+
+                    fetch("{% url 'add_comment' slug=post.slug %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `csrfmiddlewaretoken=${csrfToken}&post_id=${postId}&content=${encodeURIComponent(content)}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                            return;
+                        }
+
+                        const commentsSection = document.querySelector('#comments-list');
+
+                        const noCommentsMessage = commentsSection.querySelector('p');
+                        if (noCommentsMessage && noCommentsMessage.textContent.includes('Немає коментарів')) {
+                            noCommentsMessage.parentElement.remove(); 
+                        }
+                        const newComment = document.createElement('li');
+                        newComment.dataset.commentId = data.comment_id;
+                        newComment.innerHTML = `
+                            <div class="comment-main-level">
+                                <div class="comment-avatar">
+                                    <img src="${data.avatar_url}" alt="avatar">
+                                </div>
+                                <div class="comment-box">
+                                    <div class="comment-head">
+                                        <h6 class="comment-name"><a href="#">${data.author}</a></h6>
+                                        <!--
+                                            <button class="edit-comment-btn">Редагувати</button> 
+                                            <button class="delete-comment-btn">Видалити</button> 
+                                        -->
+                                    </div>
+                                    <div class="comment-content">${data.content}</div>
+                                </div>
+                            </div>
+                        `;
+                        commentsSection.prepend(newComment);
+                        textarea.value = '';
+                    })
+                    .catch(err => {
+                        console.error('Помилка при додаванні коментаря:', err);
+                    });
                 });
             });
-        });
-
-    </script>
-</body>
+        </script>
+    </body>
 
 </html>

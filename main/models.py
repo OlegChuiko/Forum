@@ -4,7 +4,18 @@ from django.utils import timezone
 from unidecode import unidecode
 from django.db import models
 
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True, blank=True, null=True)
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(unidecode(self.name))
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+    
 class Post(models.Model):
     title = models.CharField(max_length=200) 
     content = models.TextField()  
@@ -17,7 +28,8 @@ class Post(models.Model):
     views = models.PositiveIntegerField(default=0)
     image = models.ImageField(upload_to='posts/', null=True, blank=True)
     audio = models.FileField(upload_to='posts/audio/', null=True, blank=True)
-    
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name='posts')
+
     def save(self, *args, **kwargs):
         if not self.slug:
             base_slug = slugify(unidecode(self.title))
@@ -76,3 +88,4 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} Profile"
+    

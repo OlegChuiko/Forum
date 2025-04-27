@@ -68,6 +68,7 @@
                             </li>
                             <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Page <span class="caret"></span></a>
                                 <ul class="dropdown-menu animated zoomIn">
+                                    <li><a href="logIn.html">Login</a></li>
                                     <li><a href="contact_us.html"> Contact Us</a></li>
                                     <li><a href="ask_question.html"> Ask Question </a></li>
                                     <li><a href="post-deatils.html"> Post-Details </a></li>
@@ -111,12 +112,7 @@
                 <div class="row">
                     <div class="col-md-9">
                         <div id="main">
-                            {% if query %}
-                                <h2>Search results for "{{ query }}"</h2>
-                            {% else %}
-                                <h2>No search query provided</h2>
-                            {% endif %}
-                            {% for post in results %}
+                            {% for post in posts %}
                                 <div class="question-type2033">
                                     <div class="row">
                                         <div class="col-md-1">
@@ -155,7 +151,7 @@
                                                 </div>
                                                 <hr>
                                                 <div class="ques-icon-info3293">
-                                                    <a href="{% url 'posts_by_category' post.category.slug %}"><i class="fa fa-hashtag" style="color: black;" aria-hidden="true"> {{ post.category.name }} </i></a>                                                    <a href="#"><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a>
+                                                    <a><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a>
                                                     <a href="#"><i class="fa fa-question-circle-o" aria-hidden="true"> Question</i></a>
                                                     <a href="#"><i class="fa fa-bug" aria-hidden="true"> Report</i></a>
                                                 </div>
@@ -182,8 +178,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            {% empty %}
-                                <p>No results found for your search.</p>
                             {% endfor %}
 
                             {% if results.paginator.num_pages > 1 %}
@@ -210,25 +204,20 @@
                                         {% endif %}
                                     </ul>
                                 </nav>
-                            {% endif %}
-        
-                            </div>
-                        </div>
+                            {% endif %} 
+                        </div> 
+                    </div>
                     <aside class="col-md-3 sidebar97239">
                         <div class="categori-part329">
                             <h4>Category</h4>
                             <ul>
-                                {% for category in categories %}
-                                    <li><a href="{% url 'posts_by_category' category.slug %}">#{{ category.name }}</a></li>
-                                {% empty %}
-                                    <li>No categories found</li>
-                                {% endfor %}
+                                <li><a>#{{category.name}}</a></li>
                             </ul>
                         </div>
                     </aside>
-                </div>
-            </div>
+                </div> 
         </section>
+       
         <section class="footer-social">
             <div class="container">
                 <div class="row">

@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 from pathlib import Path
 import environ
 import os
+env = environ.Env()
+environ.Env.read_env()
 
 load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -68,6 +70,20 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+REDIS_URL = env('REDIS_URL')
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_URL, 
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": env('REDIS_PASSWORD', default=None),
+        }
+    }
+}
+
 ROOT_URLCONF = 'forum.urls'
 
 TEMPLATES = [
@@ -90,8 +106,7 @@ WSGI_APPLICATION = 'forum.wsgi.application'
 
 import dj_database_url
 
-env = environ.Env()
-environ.Env.read_env()
+
 
 DATABASES = {
 
@@ -144,3 +159,6 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_AVATAR_URL = env('DEFAULT_AVATAR')
+
+CACHE_MIDDLEWARE_KEY_PREFIX = 'forum'
+CACHE_MIDDLEWARE_ALIAS = 'default'

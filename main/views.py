@@ -1,12 +1,15 @@
+from main.models import Category, Post, Like, Dislike,Comment, UserProfile
 from django.shortcuts import get_object_or_404, render, redirect
-from main.models import Post, Like, Dislike,Comment, UserProfile
 from django.contrib.auth.decorators import login_required
 from allauth.socialaccount.models import SocialAccount
 from django.views.decorators.http import require_POST
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.http import JsonResponse
+from django.core.cache import cache
 from django.db.models import Count
 from django.utils import timezone
 from datetime import timedelta
@@ -27,12 +30,13 @@ def get_random_recent_posts(count=3, days=7):
 
 random_posts = get_random_recent_posts()
 
+
 @login_required()
+@cache_page(60 * 5)
 def index(request):
-     
     all_posts = Post.objects.annotate(
-    comment_count=Count('comments'),
-    like_count=Count('likes')
+        comment_count=Count('comments'),
+        like_count=Count('likes')
     )
 
     recent_list = all_posts.order_by('-created_at')
@@ -40,6 +44,7 @@ def index(request):
     no_response_list = all_posts.filter(comment_count=0).order_by('-created_at')
     popular_list = all_posts.order_by('-like_count', '-created_at')
 
+    filter_value = request.GET.get('filter', 'recent_post')
     page_number = request.GET.get('page')
 
     recent_paginator = Paginator(recent_list, 5)
@@ -47,18 +52,58 @@ def index(request):
     no_response_paginator = Paginator(no_response_list, 5)
     popular_paginator = Paginator(popular_list, 5)
 
+    if filter_value == 'recent_post':
+        recent_page = recent_paginator.get_page(page_number)
+        most_response_page = most_response_paginator.get_page(1)
+        no_response_page = no_response_paginator.get_page(1)
+        popular_page = popular_paginator.get_page(1)
+    elif filter_value == 'most_response':
+        recent_page = recent_paginator.get_page(1)
+        most_response_page = most_response_paginator.get_page(page_number)
+        no_response_page = no_response_paginator.get_page(1)
+        popular_page = popular_paginator.get_page(1)
+    elif filter_value == 'no_response':
+        recent_page = recent_paginator.get_page(1)
+        most_response_page = most_response_paginator.get_page(1)
+        no_response_page = no_response_paginator.get_page(page_number)
+        popular_page = popular_paginator.get_page(1)
+    elif filter_value == 'popular_post':
+        recent_page = recent_paginator.get_page(1)
+        most_response_page = most_response_paginator.get_page(1)
+        no_response_page = no_response_paginator.get_page(1)
+        popular_page = popular_paginator.get_page(page_number)
+
+    recent_page = recent_paginator.get_page(page_number)
+    most_response_page = most_response_paginator.get_page(page_number)
+    no_response_page = no_response_paginator.get_page(page_number)
+    popular_page = popular_paginator.get_page(page_number)
+
+    categories_for_recent = {post.category for post in recent_page if post.category}
+    categories_for_most_response = {post.category for post in most_response_page if post.category}
+    categories_for_no_response = {post.category for post in no_response_page if post.category}
+    categories_for_popular = {post.category for post in popular_page if post.category}
+
     user = request.user
-    post_count = Post.objects.filter(author=user).count()
-    comment_count = Comment.objects.filter(author=user).count()
+    counts = Post.objects.filter(author=user).aggregate(
+        post_count=Count('id'),
+        comment_count=Count('comments')
+    )
 
     context = {
-        'recent_posts': recent_paginator.get_page(page_number),
-        'most_response_posts': most_response_paginator.get_page(page_number),
-        'no_response_posts': no_response_paginator.get_page(page_number),
-        'popular_posts': popular_paginator.get_page(page_number),
-        'random_posts': random_posts,
-        'post_count': post_count,
-        'comment_count': comment_count
+        'recent_posts': recent_page,
+        'most_response_posts': most_response_page,
+        'no_response_posts': no_response_page,
+        'popular_posts': popular_page,
+
+        'categories_for_recent': categories_for_recent,
+        'categories_for_most_response': categories_for_most_response,
+        'categories_for_no_response': categories_for_no_response,
+        'categories_for_popular': categories_for_popular,
+
+        'post_count': counts['post_count'],
+        'comment_count': counts['comment_count'],
+
+        'random_posts':random_posts
     }
 
     return render(request, 'main/index.html', context)
@@ -74,6 +119,7 @@ def create_post(request):
         title = request.POST.get("title")
         image = request.FILES.get("image")
         audio = request.FILES.get("audio")
+        category_name = request.POST.get("category")
 
         ALLOWED_TAGS = [
             'p', 'br', 'b', 'i', 'u', 'em', 'strong', 'ul', 'ol', 'li', 'span'
@@ -91,20 +137,31 @@ def create_post(request):
             strip=True
         )
 
+        category, created = Category.objects.get_or_create(name=category_name, slug=category_name.lower().replace(" ", "-"))
+
         post = Post(
             title=title,
             content=clean_content,
             author=request.user,
             image=image,
-            audio=audio
+            audio=audio,
+            category=category  
         )
         post.save()
+        cache.clear()
         return redirect('index')
+    
+    categories = Category.objects.all()
     user = request.user
     post_count = Post.objects.filter(author=user).count()
     comment_count = Comment.objects.filter(author=user).count()
 
-    return render(request, 'main/create_post.html',{'random_posts': random_posts,'post_count':post_count,'comment_count':comment_count})
+    return render(request, 'main/create_post.html', {
+        'random_posts': random_posts, 
+        'post_count': post_count, 
+        'comment_count': comment_count,
+        'categories': categories
+    })
 
 @login_required()
 def like_dislike(request, slug):
@@ -134,6 +191,7 @@ def like_dislike(request, slug):
                 Like.objects.create(post=post, user=user)
                 post.likes += 1
 
+
         elif action == 'dislike':
             if liked.exists():
                 liked.delete()
@@ -145,20 +203,12 @@ def like_dislike(request, slug):
                 Dislike.objects.create(post=post, user=user)
                 post.dislikes += 1
 
+
         post.save()
 
         return JsonResponse({"likes": post.likes, "dislikes": post.dislikes})
     
     return JsonResponse({"error": "Invalid request."}, status=400)
-
-@login_required()
-def profile_view(request, username):
-    user = get_object_or_404(User, username=username)
-    posts = Post.objects.filter(author=user).order_by('-created_at')
-    return render(request, 'main/profile.html', {
-        'profile_user': user,
-        'posts': posts,
-    })
 
 @require_POST
 @login_required
@@ -275,10 +325,57 @@ def search_results(request):
     results = []
 
     if query:
-        results = Post.objects.filter(title__icontains=query) 
+        results = Post.objects.filter(title__icontains=query)
+
+    categories = (
+    Category.objects.filter(posts__in=results)
+    .distinct()
+    )
 
     return render(request, 'main/search.html', {
         'results': results,
-        'query': query
+        'query': query,
+        'categories': categories
     })
 
+login_required()
+def check_category(request):
+    if request.method == "POST":
+        import json
+        data = json.loads(request.body)
+        category_name = data.get('category')
+        
+        exists = Category.objects.filter(name=category_name).exists()
+        
+        return JsonResponse({'exists': exists})
+    
+def posts_by_category(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    posts = Post.objects.filter(category=category)
+
+    user = request.user
+    post_count = Post.objects.filter(author=user).count()
+    comment_count = Comment.objects.filter(author=user).count()
+
+    context = {
+        'category': category,
+        'posts': posts,
+        'random_posts': random_posts,
+        'post_count': post_count,
+        'comment_count': comment_count
+    }
+    return render(request, 'main/posts_by_category.html', context)
+
+def post_counters(request):
+    post_ids = request.GET.getlist('ids[]')
+    data = {}
+
+    posts = Post.objects.filter(id__in=post_ids).annotate(comment_count=Count('comments'))
+
+    for post in posts:
+        data[str(post.id)] = { 
+            'comments': post.comment_count,
+            'views': post.views,
+        }
+
+    return JsonResponse(data)

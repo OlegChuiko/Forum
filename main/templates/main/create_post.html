@@ -110,25 +110,36 @@
                         <div class="ask-question-input-part032">
                             <h4>Ask Question</h4>
                         <hr>
-                            <form method="POST" enctype="multipart/form-data">
-                                {% csrf_token %}
-                                <div class="question-title39">
-                                    <span class="form-description433">Question-Title* </span><input type="text" name="title" class="question-ttile32" placeholder="Write Your Question Title">
+                        <form method="POST" enctype="multipart/form-data" id="create-post-form">
+                            {% csrf_token %}
+                            <div class="question-title39">
+                                <span class="form-description433">Question-Title* </span>
+                                <input type="text" name="title" class="question-ttile32" placeholder="Write Your Question Title" required>
+                            </div>
+                            <div class="categori49">
+                                <span class="form-description43305">Category* </span>
+                                <label>
+                                    <input list="browsers" name="category" class="list-category53" id="category-input" required>
+                                </label>
+                                <datalist id="browsers">
+                                    {% for category in categories %}
+                                        <option value="{{ category.name }}"></option>
+                                    {% endfor %}
+                                </datalist>
+                                <span id="category-error" style="color: red; display: none;">Category not found!</span>
+                            </div>
+                            <div class="button-group-addfile3239">
+                                <span class="form-description23993">Attactment*</span><input type="file" name="image" class="question-ttile3226"> 
+                            </div>
+                            <div class="details2-239">
+                                <div class="col-md-12 nopadding">
+                                    <textarea name="content" id="txtEditor" ></textarea> 
                                 </div>
-                                
-                                <div class="button-group-addfile3239">
-                                    <span class="form-description23993">Attactment*</span><input type="file" name="image" class="question-ttile3226">
-                                    
-                                </div>
-                                <div class="details2-239">
-                                    <div class="col-md-12 nopadding">
-                                        <textarea name="content" id="txtEditor" ></textarea> 
-                                    </div>
-                                </div>	  
-                                <div class="publish-button2389">
-                                    <button type="submit" class="publis1291">Publish your Question</button>
-                                </div>               
-                            </form>
+                            </div>	 
+                            <div class="publish-button2389">
+                                <button  class="publis1291" type="submit" id="submit-button" disabled>Publish your question</button>
+                            </div>  
+                        </form>
                     </div>
                 </div>
             <aside class="col-md-3 sidebar97239">
@@ -155,7 +166,7 @@
                                 <a href="{% url 'post_detail' post.slug %}">
                                     <h5>{{ post.title }}</h5>
                                 </a>
-                                <p>{{ post.content|truncatewords:12 }}</p>
+                                <p>{{ post.content|truncatewords:12|safe }}</p>
                                 <small style="color: #848991">{{ post.created_at|date:"F d, Y" }}</small>
                                 <hr>
                             </div>
@@ -175,7 +186,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-md-6">
-                        <p>Copyright 2017 Ask me | <strong>Sudo  Coder</strong></p>
+                        <p>Copyright 2025 Ask me | <strong>Team Atlantida</strong></p>
                     </div>
                 </div>
             </div>
@@ -184,16 +195,7 @@
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="{% static 'js/editor.js' %}"></script>
-        <script>
-            $(document).ready(function () {
-                $("#txtEditor").Editor();
-        
-                $("form").on("submit", function () {
-                    const content = $(".Editor-editor").html();  
-                    $("#txtEditor").val(content);  
-                });
-            });
-        </script>
-    
+        <script src="{% static 'js/errorCategory.js' %}"></script>
+        <script src="{% static 'js/textEditor.js' %}"></script>
     </body>
 </html>
