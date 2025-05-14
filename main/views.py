@@ -1,4 +1,5 @@
-from main.models import Category, Post, Like, Dislike,Comment, UserProfile
+from main.models import Category, Post, Like, Dislike,Comment, UserProfile,Report
+from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from allauth.socialaccount.models import SocialAccount
@@ -10,7 +11,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.http import JsonResponse
 from django.core.cache import cache
+from django.contrib import messages
 from django.db.models import Count
+from main.forms import ReportForm
 from django.utils import timezone
 from datetime import timedelta
 from forum import settings
@@ -379,3 +382,40 @@ def post_counters(request):
         }
 
     return JsonResponse(data)
+
+@login_required
+def report_post(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+
+    existing_report = Report.objects.filter(post=post, reported_by=request.user).first()
+    if existing_report:
+        return render(request, 'main/report_exists.html', {'post': post})
+
+    if request.method == "POST":
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data.get('reason')
+            if reason == 'Other':
+                other_reason = form.cleaned_data.get('other_reason')
+                reason = other_reason
+
+            report = form.save(commit=False)
+            report.post = post
+            report.reported_by = request.user
+            report.reason = reason
+            report.save()
+
+            return redirect('post_detail', slug=post.slug)
+    else:
+        form = ReportForm()
+
+    return render(request, 'main/report_post.html', {'form': form, 'post': post})
+
+
+
+@staff_member_required
+def admin_delete_post(request, post_slug):
+    post = get_object_or_404(Post, slug=post_slug)
+    post.delete()
+    messages.success(request, "Пост успішно видалено.")
+    return redirect('/admin/main/report/')

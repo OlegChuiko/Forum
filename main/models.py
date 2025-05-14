@@ -89,3 +89,14 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username} Profile"
     
+
+
+class Report(models.Model):
+    post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='reports')
+    reported_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    reason = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Report on '{self.post.title}' by {self.reported_by.username}"
+    
