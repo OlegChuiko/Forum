@@ -14,37 +14,11 @@
         <meta name="robots" content="index, nofollow">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <meta name="language" content="English">
-        <title>Ask Me</title>
+        <title>Forum</title>
         <link href="{% static 'css/main/bootstrap.css' %}" rel="stylesheet" type="text/css">
         <link href="{% static 'css/main/style.css' %}" rel="stylesheet" type="text/css">
         <link href="{% static 'css/main/animate.css' %}" rel="stylesheet" type="text/css"> 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <style>
-            .modal {
-                display: none;
-                position: fixed;
-                z-index: 1000;
-                left: 0; top: 0;
-                width: 100%; height: 100%;
-                background-color: rgba(0,0,0,0.5);
-              }
-              
-              .modal-content {
-                background-color: #fff;
-                margin: 10% auto;
-                padding: 20px;
-                width: 40%;
-                border-radius: 10px;
-                position: relative;
-              }
-              
-              .close {
-                position: absolute;
-                top: 10px; right: 15px;
-                font-size: 24px;
-                cursor: pointer;
-            }
-        </style>
     </head>
 
     <body>
@@ -79,30 +53,14 @@
             <nav class="navbar navbar-default">
                 <div class="container">
                     <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-                        <a class="navbar-brand" href="#"><img src="#" alt="Logo"></a>
+                        <a class="navbar-brand" href="{% url 'index'%}"><img src="{% static 'images/Logo.png' %}" alt="Logo"></a>
                     </div>
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav"> </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="{% url 'index'%}">Home</a></li>
                             <li><a href="{% url 'create_post'%}">Ask Question</a></li>
-                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog <span class="caret"></span></a>
-                                <ul class="dropdown-menu animated zoomIn">
-                                    <li><a href="blog.html">Blog </a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Page <span class="caret"></span></a>
-                                <ul class="dropdown-menu animated zoomIn">
-                                    <li><a href="contact_us.html"> Contact Us</a></li>
-                                    <li><a href="ask_question.html"> Ask Question </a></li>
-                                    <li><a href="post-deatils.html"> Post-Details </a></li>
-                                    <li><a href="user.html">All User</a></li>
-                                    <li><a href="user_question.html"> User Question </a></li>
-                                    <li><a href="category.html"> Category </a></li>
-                                </ul>
-                            </li>
-                            <li><a href="contact_us.html">Contact us</a></li>
+                            <li><a href="#">Blog </a></li>
                         </ul>
                     </div>
 
@@ -113,9 +71,9 @@
         <section class="welcome-part-one">
             <div class="container">
                 <div class="welcome-demop102 text-center">
-                    <h2>Welcome to Ask me, Awesome Questions & Answer</h2>
-                    <p>Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque
-                        <br> habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit</p>
+                    <h2>Welcome to the Forum! Ask any questions — you'll get interesting answers</h2>
+                    <p>Our forum brings together people who are ready to help, share knowledge, and listen to your opinion.
+                        <br> Ask freely — together we'll find the best answers, solutions, and inspiration for new ideas</p>
                     <div class="form-style8292">
                         <form method="get" action="{% url 'search_results' %}"> 
                             <div class="input-group">
@@ -191,7 +149,7 @@
                                                         <a href="{% url 'posts_by_category' post.category.slug %}"><i class="fa fa-hashtag" style="color: black;" aria-hidden="true"> {{ post.category.name }} </i></a> 
                                                         <a href="#"><i class="fa fa-clock-o" aria-hidden="true"> {{ post.created_at|timesince }} ago</i></a> 
                                                         <a href="#"><i class="fa fa-question-circle-o" aria-hidden="true"> Question</i></a>
-                                                        <a href="#" onclick="openReportModal('{{ post.slug }}')"><i class="fa fa-bug" aria-hidden="true"> Report</i></a>
+                                                        <a onclick="openReportModal('{{ post.slug }}')"><i class="fa fa-bug" aria-hidden="true"> Report</i></a>
                                                     </div>
                                                     <div id="reportModal-{{ post.slug }}" class="modal" style="display:none;">
                                                         <div class="modal-content">
@@ -633,33 +591,6 @@
         <script src="{% static 'js/jquery-3.1.1.min.js' %}"></script>
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
         <script src="{% static 'js/postCounterAndFilter.js' %}"></script>  
-        <script>
-            function openReportModal(slug) {
-                document.getElementById("reportModal-" + slug).style.display = "block";
-            }
-            
-            function closeReportModal(slug) {
-                document.getElementById("reportModal-" + slug).style.display = "none";
-            }
-            
-            window.onclick = function(event) {
-                document.querySelectorAll(".modal").forEach(modal => {
-                    if (event.target === modal) {
-                        modal.style.display = "none";
-                    }
-                });
-            }
-
-            function toggleOtherReasonField() {
-                var reasonSelect = document.getElementById("reason-select");
-                var otherReasonField = document.getElementById("other-reason-field");
-        
-                if (reasonSelect.value === "Other") {
-                    otherReasonField.style.display = "block";
-                } else {
-                    otherReasonField.style.display = "none";
-                }
-            }
-        </script>         
+        <script src="{% static 'js/reportModal.js' %}"></script>       
     </body>
 </html>

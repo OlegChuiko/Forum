@@ -5,6 +5,83 @@
     padding: 0;
 }
 
+.reply-form textarea {
+    width: 100%;
+    height: 80px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    margin-top: 5px;
+    resize: none; 
+}
+
+.reply-form button {
+    margin-top: 5px;
+    padding: 8px 15px;
+    background-color: #FF7361;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.reply-form button:hover {
+    background-color: #FF7361;
+}
+
+.reply-link-wrapper {
+    margin-top: 5px;
+    text-align: left; 
+}
+
+.reply-link-wrapper a.reply-toggle {
+    text-decoration: underline;
+    color: #999;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-block; 
+}
+
+.l-share2093 {
+    cursor: pointer;
+}
+#share-links a {
+    color: #FF7361;
+    text-decoration: none;
+    margin-right: 10px;
+}
+#share-links a:hover {
+    text-decoration: underline;
+    top: 30px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    }
+    
+    .modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    width: 40%;
+    border-radius: 10px;
+    position: relative;
+    }
+    
+    .close {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
 body {
     background-color: #F3F3F3;
 }
@@ -621,6 +698,7 @@ hr {
 
 .ques-icon-info3293 .fa-bug {
     color: #222629;
+    cursor: pointer;
 }
 
 .ques-icon-info3293 .check-color329 {

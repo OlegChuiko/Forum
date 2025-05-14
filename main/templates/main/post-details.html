@@ -26,8 +26,8 @@
                     <div class="col-md-6">
                         <div class="navbar-menu-left-side239">
                             <ul>
-                                <li><a href="contact_us.html" target="_blank"><i class="fa fa-envelope-o" aria-hidden="true"></i>Contact</a></li>
-                                <li><a href="#" target="_blank"><i class="fa fa-headphones" aria-hidden="true"></i>Support</a></li>
+                                <li><a href="#"><i class="fa fa-envelope-o" aria-hidden="true"></i>Contact</a></li>
+                                <li><a href="#"><i class="fa fa-headphones" aria-hidden="true"></i>Support</a></li>
                                 <li><a href="{% url 'logout' %}"><i class="fa fa-user" aria-hidden="true"></i>Logout</a></li>
                             </ul>
                         </div>
@@ -52,39 +52,14 @@
                 <div class="container">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-                        <a class="navbar-brand" href="#"><img src="image/logo.png" alt="Logo"></a>
+                        <a class="navbar-brand" href="{% url 'index'%}"><img src="{% static 'images/Logo.png' %}" alt="Logo"></a>
                     </div>
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav"> </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="{% url 'index'%}">Home</a></li>
                             <li><a href="{% url 'create_post'%}">Ask Question</a></li>
-                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Question <span class="caret"></span></a>
-                                <ul class="dropdown-menu animated zoomIn">
-                                    <li><a href="category.html">Question Category</a></li>
-                                    <li><a href="category.html">HTML</a></li>
-                                    <li><a href="category.html">CSS</a></li>
-                                    <li><a href="category.html">Javascript</a></li>
-                                    <li><a href="category.html">Bootstrap</a></li>
-                                </ul>
-                            </li>
-                        
-                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog <span class="caret"></span></a>
-                                <ul class="dropdown-menu animated zoomIn">
-                                    <li><a href="blog.html">Blog </a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Page <span class="caret"></span></a>
-                                <ul class="dropdown-menu animated zoomIn">
-                                    <li><a href="contact_us.html"> Contact Us</a></li>
-                                    <li><a href="ask_question.html"> Ask Question </a></li>
-                                    <li><a href="post-deatils.html"> Post-Details </a></li>
-                                    <li><a href="user.html">All User</a></li>
-                                    <li><a href="#"> User Question </a></li>
-                                    <li><a href="#"> Category </a></li>
-                                </ul>
-                            </li>
-                            <li><a href="contact_us.html">Contact us</a></li>
+                            <li><a href="#">Blog </a></li>
                         </ul>
                     </div>
                 </div>
@@ -111,7 +86,32 @@
                                             <h3>{{ post.title }}</h3> </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <div class="post-que-rep-rihght320"> <a href="#"><i class="fa fa-question-circle" aria-hidden="true"></i> Question</a> <a href="#" class="r-clor10">Report</a> </div>
+                                        <div class="post-que-rep-rihght320"> <a href="#"><i class="fa fa-question-circle" aria-hidden="true"></i> Question</a> <a onclick="openReportModal('{{ post.slug }}')" class="r-clor10">Report</a> </div>
+                                    </div>
+                                    <div id="reportModal-{{ post.slug }}" class="modal" style="display:none;">
+                                        <div class="modal-content">
+                                            <span class="close" onclick="closeReportModal('{{ post.slug }}')">&times;</span>
+                                            <form method="POST" action="{% url 'report_post' post.slug %}">
+                                                {% csrf_token %}
+                                                
+                                                <label for="reason">Причина скарги:</label>
+                                                <select id="reason-select" name="reason" required onchange="toggleOtherReasonField()">
+                                                    <option value="">Оберіть причину</option>
+                                                    <option value="Inappropriate Content">Неправильний контент</option>
+                                                    <option value="Spam">Спам</option>
+                                                    <option value="Offensive Language">Образлива мова</option>
+                                                    <option value="Other">Інше</option>
+                                                </select>
+                                    
+                                                <!-- Поле для вводу причини, яке показується тільки при виборі "Інше" -->
+                                                <div id="other-reason-field" style="display: none;">
+                                                    <label for="other-reason">Вкажіть причину:</label>
+                                                    <textarea name="other_reason" rows="4" style="width: 100%;"></textarea>
+                                                </div>
+                                    
+                                                <button type="submit" style="margin-top: 10px;">Надіслати скаргу</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -141,8 +141,21 @@
                             </div>
                         </div>
                         <div class="share-tags-page-content12092">
-                            <div class="l-share2093"> <i class="fa fa-share" aria-hidden="true"> Share</i> </div>
-                            <div class="R-tags309"> <i class="fa fa-tags" aria-hidden="true"> Wordpress, Question, Developer</i> </div>
+                            <div class="l-share2093" onclick="toggleShare()"> 
+                                <i class="fa fa-share" aria-hidden="true"></i> Share
+                            </div>
+
+                            <div id="share-links" style="display: none; margin-top: 5px; margin-left: 20px;">
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank">
+                                    <i class="fab fa-facebook"></i> Facebook
+                                </a> |
+                                <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank">
+                                    <i class="fab fa-twitter"></i> Twitter
+                                </a> |
+                                <a href="https://t.me/share/url?url={{ request.build_absolute_uri }}" target="_blank">
+                                    <i class="fab fa-telegram"></i> Telegram
+                                </a>
+                            </div>
                         </div>
                         <div class="author-details8392">
                             {% if post.author.socialaccount_set.exists %}
@@ -181,7 +194,7 @@
                                     <div class="comments-container">
                                         <ul id="comments-list" class="comments-list">
                                             {% for comment in comments %}
-                                                <li>
+                                                <li data-comment-id="{{ comment.id }}">
                                                     <div class="comment-main-level">
                                                         {% if comment.author.socialaccount_set.exists %}
                                                             {% with comment.author.socialaccount_set.first as sa %}
@@ -192,18 +205,61 @@
                                                         {% else %}
                                                             <div class="comment-avatar"><img src="{{ DEFAULT_AVATAR_URL }}" alt="default"></div>
                                                         {% endif %}
+
                                                         <div class="comment-box">
                                                             <div class="comment-head">
                                                                 <h6 class="comment-name"><a href="#">{{ comment.author.username }}</a></h6>
+                                                                <span><i class="fa fa-clock-o" aria-hidden="true"></i> {{ comment.created_at|date:"j E Y, H:i" }}</span>
                                                             </div>
+
                                                             <div class="comment-content">
                                                                 {{ comment.content }}
                                                             </div>
+
+                                                            <div class="reply-link-wrapper">
+                                                                <a href="javascript:void(0);" class="reply-toggle" data-comment-id="{{ comment.id }}">Reply</a>
+                                                            </div>
+
+                                                            <form method="post" class="reply-form" data-comment-id="{{ comment.id }}" style="display: none; margin-top: 10px;">
+                                                                {% csrf_token %}
+                                                                <textarea name="content" placeholder="Your reply..." required style="width: 100%; height: 70px;"></textarea>
+                                                                <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                                                <button type="submit" style="margin-top: 5px;">Send</button>
+                                                            </form>
                                                         </div>
                                                     </div>
+
+                                                    {% if comment.replies.all %}
+                                                        <ul class="comments-list reply-list">
+                                                            {% for reply in comment.replies.all %}
+                                                                <li>
+                                                                    <div class="comment-avatar">
+                                                                        {% if reply.author.socialaccount_set.exists %}
+                                                                            {% with reply.author.socialaccount_set.first as sa %}
+                                                                                <img src="{{ sa.get_avatar_url }}" alt="avatar">
+                                                                            {% endwith %}
+                                                                        {% elif reply.author.userprofile.avatar %}
+                                                                            <img src="{{ reply.author.userprofile.avatar.url }}" alt="avatar">
+                                                                        {% else %}
+                                                                            <img src="{{ DEFAULT_AVATAR_URL }}" alt="default">
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div class="comment-box">
+                                                                        <div class="comment-head">
+                                                                            <h6 class="comment-name"><a href="#">{{ reply.author.username }}</a></h6>
+                                                                            <span><i class="fa fa-clock-o" aria-hidden="true"></i> {{ reply.created_at|date:"j E Y, H:i" }}</span>
+                                                                        </div>
+                                                                        <div class="comment-content">
+                                                                            {{ reply.content }}
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            {% endfor %}
+                                                        </ul>
+                                                    {% endif %}
                                                 </li>
                                             {% empty %}
-                                                <li><p>Немає коментарів.</p></li>
+                                                <li><p>No comments.</p></li>
                                             {% endfor %}
                                         </ul>
                                 </div>
@@ -274,6 +330,7 @@
         <script src="{% static 'js/bootstrap.min.js' %}"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="{% static 'js/LikeDislikeComments.js' %}"></script>
+        <script src="{% static 'js/reportModal.js' %}"></script>
         <script>
             const commentForms = document.querySelectorAll('.comment-form');
 
@@ -305,9 +362,10 @@
                         const commentsSection = document.querySelector('#comments-list');
 
                         const noCommentsMessage = commentsSection.querySelector('p');
-                        if (noCommentsMessage && noCommentsMessage.textContent.includes('Немає коментарів')) {
+                        if (noCommentsMessage && noCommentsMessage.textContent.includes('No comments.')) {
                             noCommentsMessage.parentElement.remove(); 
                         }
+
                         const newComment = document.createElement('li');
                         newComment.dataset.commentId = data.comment_id;
                         newComment.innerHTML = `
@@ -318,24 +376,186 @@
                                 <div class="comment-box">
                                     <div class="comment-head">
                                         <h6 class="comment-name"><a href="#">${data.author}</a></h6>
-                                        <!--
-                                            <button class="edit-comment-btn">Редагувати</button> 
-                                            <button class="delete-comment-btn">Видалити</button> 
-                                        -->
+                                        <span><i class="fa fa-clock-o" aria-hidden="true"></i> ${data.created_at}</span>
                                     </div>
                                     <div class="comment-content">${data.content}</div>
+                                    <div class="reply-link-wrapper">
+                                        <a href="javascript:void(0);" class="reply-toggle" data-comment-id="${data.comment_id}">Reply</a>
+                                    </div>
+                                    <form method="post" class="reply-form" data-comment-id="${data.comment_id}" style="display: none; margin-top: 10px;">
+                                        <input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">
+                                        <textarea name="content" placeholder="Your reply..." required style="width: 100%; height: 70px;"></textarea>
+                                        <input type="hidden" name="parent_id" value="${data.comment_id}">
+                                        <button type="submit" style="margin-top: 5px;">Send</button>
+                                    </form>
                                 </div>
                             </div>
                         `;
+
                         commentsSection.prepend(newComment);
                         textarea.value = '';
+
+                        attachReplyToggle(newComment);
+                        attachReplySubmit(newComment);
                     })
                     .catch(err => {
                         console.error('Помилка при додаванні коментаря:', err);
                     });
                 });
             });
+
+            function attachReplyToggle(container) {
+                container.querySelectorAll('.reply-toggle').forEach(link => {
+                    link.addEventListener('click', function () {
+                        const commentId = link.getAttribute('data-comment-id');
+                        const form = container.querySelector(`.reply-form[data-comment-id="${commentId}"]`);
+                        if (form) {
+                            form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+                        }
+                    });
+                });
+            }
+
+            function attachReplySubmit(container) {
+                container.querySelectorAll('.reply-form').forEach(form => {
+                    form.addEventListener('submit', function (e) {
+                        e.preventDefault();
+
+                        const commentId = form.getAttribute('data-comment-id');
+                        const textarea = form.querySelector('textarea');
+                        const content = textarea.value.trim();
+                        const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                        if (!content) return;
+
+                        fetch("{% url 'add_reply' %}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: `csrfmiddlewaretoken=${csrfToken}&parent_id=${commentId}&content=${encodeURIComponent(content)}`
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.error) {
+                                alert(data.error);
+                                return;
+                            }
+
+                            let repliesList = container.querySelector('.reply-list');
+                            if (!repliesList) {
+                                repliesList = document.createElement('ul');
+                                repliesList.classList.add('comments-list', 'reply-list');
+                                container.appendChild(repliesList);
+                            }
+
+                            const newReply = document.createElement('li');
+                            newReply.innerHTML = `
+                                <div class="comment-avatar">
+                                    <img src="${data.avatar_url}" alt="avatar">
+                                </div>
+                                <div class="comment-box">
+                                    <div class="comment-head">
+                                        <h6 class="comment-name"><a href="#">${data.author}</a></h6>
+                                        <span><i class="fa fa-clock-o" aria-hidden="true"></i> ${data.created_at}</span>
+                                    </div>
+                                    <div class="comment-content">${data.content}</div>
+                                </div>
+                            `;
+                            repliesList.appendChild(newReply);
+
+                            textarea.value = '';
+                            form.style.display = 'none';
+                        })
+                        .catch(err => {
+                            console.error('Помилка при додаванні відповіді:', err);
+                        });
+                    });
+                });
+            }
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            const replyForms = document.querySelectorAll('.reply-form');
+
+            replyForms.forEach(form => {
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    const commentId = form.getAttribute('data-comment-id');
+                    const textarea = form.querySelector('textarea');
+                    const content = textarea.value.trim();
+                    const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                    if (!content) return;
+
+                    fetch("{% url 'add_reply' %}", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `csrfmiddlewaretoken=${csrfToken}&parent_id=${commentId}&content=${encodeURIComponent(content)}`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                            return;
+                        }
+
+                        const commentElement = document.querySelector(`li[data-comment-id="${commentId}"]`);
+                        let repliesList = commentElement.querySelector('.reply-list');
+
+                        if (!repliesList) {
+                            repliesList = document.createElement('ul');
+                            repliesList.classList.add('comments-list', 'reply-list');
+                            commentElement.appendChild(repliesList);
+                        }
+
+                        const newReply = document.createElement('li');
+                        newReply.innerHTML = `
+                            <div class="comment-avatar">
+                                <img src="${data.avatar_url}" alt="avatar">
+                            </div>
+                            <div class="comment-box">
+                                <div class="comment-head">
+                                    <h6 class="comment-name"><a href="#">${data.author}</a></h6>
+                                    <span><i class="fa fa-clock-o" aria-hidden="true"></i> ${data.created_at}</span>
+                                </div>
+                                <div class="comment-content">${data.content}</div>
+                            </div>
+                        `;
+
+                        repliesList.appendChild(newReply);
+                        textarea.value = '';
+                        form.style.display = 'none';
+                    })
+                    .catch(err => {
+                        console.error('Помилка при додаванні відповіді:', err);
+                    });
+                });
+            });
+
+            document.querySelectorAll('.reply-toggle').forEach(link => {
+                link.addEventListener('click', function () {
+                    console.log("Натиснули Reply");
+                    const commentId = link.getAttribute('data-comment-id');
+                    const form = document.querySelector(`.reply-form[data-comment-id="${commentId}"]`);
+                    if (form) {
+                        form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+                    }
+                });
+            });
+        });
+        </script>
+        <script>
+          function toggleShare() {
+            const links = document.getElementById("share-links");
+            const tags = document.querySelector(".R-tags309");
+
+            const isVisible = links.style.display === "block";
+            links.style.display = isVisible ? "none" : "block";
+        }
         </script>
     </body>
-
 </html>

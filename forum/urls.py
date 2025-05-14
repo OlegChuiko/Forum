@@ -26,4 +26,5 @@ urlpatterns = [
     path('post-counters/', main.views.post_counters, name='post_counters'),
     path('admin/delete_post/<slug:post_slug>/', main.views.admin_delete_post, name='admin_delete_post'),
     path('report/<slug:slug>/', main.views.report_post, name='report_post'),
+    path('add-reply/', main.views.add_reply, name='add_reply'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

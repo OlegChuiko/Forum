@@ -19,7 +19,6 @@
         <link href="{% static 'css/main/style.css' %}" rel="stylesheet" type="text/css">
         <link href="{% static 'css/main/animate.css' %}" rel="stylesheet" type="text/css"> 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
     <body>
         <div class="top-bar">
             <div class="container">
@@ -54,30 +53,14 @@
                 <div class="container">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-                        <a class="navbar-brand" href="#"><img src="image/logo.png" alt="Logo"></a>
+                        <a class="navbar-brand" href="{% url 'index'%}"><img src="{% static 'images/Logo.png' %}" alt="Logo"></a>
                     </div>
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav"> </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="{% url 'index'%}">Home</a></li>
                             <li><a href="{% url 'create_post'%}">Ask Question</a></li>
-                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Blog <span class="caret"></span></a>
-                                <ul class="dropdown-menu animated zoomIn">
-                                    <li><a href="blog.html">Blog </a></li>
-                                </ul>
-                            </li>
-                            <li class="dropdown"> <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Page <span class="caret"></span></a>
-                                <ul class="dropdown-menu animated zoomIn">
-                                    <li><a href="contact_us.html"> Contact Us</a></li>
-                                    <li><a href="ask_question.html"> Ask Question </a></li>
-                                    <li><a href="post-deatils.html"> Post-Details </a></li>
-                                    <li><a href="user.html">All User</a></li>
-                                    <li><a href="user_question.html"> User Question </a></li>
-                                    <li><a href="category.html"> Category </a></li>
-                                    <li><a href="#"> 404 </a></li>
-                                </ul>
-                            </li>
-                            <li><a href="contact_us.html">Contact us</a></li>
+                            <li><a href="blog.html">Blog </a></li>
                         </ul>
                     </div>
 
@@ -87,9 +70,6 @@
         <section class="welcome-part-one">
             <div class="container">
                 <div class="welcome-demop102 text-center">
-                    <h2>Welcome to Ask me, Awesome Questions & Answer Template</h2>
-                    <p>Duis dapibus aliquam mi, eget euismod sem scelerisque ut. Vivamus at elit quis urna adipiscing iaculis. Curabitur vitae velit in neque dictum blandit. Proin in iaculis neque. Pellentesque
-                        <br> habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Curabitur vitae velit in neque dictum blandit</p>
                     <div class="form-style8292">
                         <form method="get" action="{% url 'search_results' %}"> 
                             <div class="input-group">

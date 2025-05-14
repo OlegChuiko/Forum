@@ -6,6 +6,7 @@ from allauth.socialaccount.models import SocialAccount
 from django.views.decorators.http import require_POST
 from django.views.decorators.cache import cache_page
 from django.utils.decorators import method_decorator
+from django.utils.dateformat import DateFormat
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
@@ -237,7 +238,7 @@ def add_comment(request, slug):
         "comment_id": comment.id,
         "author": comment.author.username,
         "content": comment.content,
-        "created_at": comment.created_at.strftime("%Y-%m-%d %H:%M"),
+        "created_at": DateFormat(comment.created_at).format('F d, Y'),
         "avatar_url": avatar_url,
         "is_owner": True  
     })
@@ -291,7 +292,8 @@ def update_avatar(request):
 @login_required()
 def post_detail(request, slug):
     post = get_object_or_404(Post, slug=slug)
-    comments = Comment.objects.filter(post=post).order_by('-created_at')
+  
+    comments = Comment.objects.filter(post=post, parent__isnull=True).order_by('-created_at')
 
     if request.user.is_authenticated:
         try:
@@ -419,3 +421,39 @@ def admin_delete_post(request, post_slug):
     post.delete()
     messages.success(request, "Пост успішно видалено.")
     return redirect('/admin/main/report/')
+
+@login_required
+def add_reply(request):
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        parent_id = request.POST.get('parent_id')
+
+        if not content or not parent_id:
+            return JsonResponse({'error': 'Потрібен вміст і parent_id'}, status=400)
+
+        parent_comment = get_object_or_404(Comment, id=parent_id)
+        reply = Comment.objects.create(
+            post=parent_comment.post,
+            author=request.user,
+            content=content,
+            parent=parent_comment
+        )
+
+        avatar_url = (
+            reply.author.socialaccount_set.first().get_avatar_url()
+            if reply.author.socialaccount_set.exists()
+            else (
+                reply.author.userprofile.avatar.url
+                if hasattr(reply.author, 'userprofile') and reply.author.userprofile.avatar
+                else '/static/images/default-avatar.png'
+            )
+        )
+
+        return JsonResponse({
+            'author': reply.author.username,
+            'content': reply.content,
+            "created_at": DateFormat(reply.created_at).format('F d, Y'),
+            'avatar_url': avatar_url,
+            'comment_id': reply.id,
+            'parent_id': parent_comment.id,
+        })
